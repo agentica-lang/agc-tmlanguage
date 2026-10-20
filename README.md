@@ -34,8 +34,8 @@ A TextMate grammar matches lines with regular expressions, so it approximates th
 - Only one or two heredocs may open on the same line. When two do, a line of the second body that starts at column 0
   with `<<~NAME` opens a new heredoc.
 - A map key written as a bare name (`{a: 1}`) is scoped like a named argument.
-- Outside `def` headers, type aliases and generic arguments (`Models.User[T]`), `Models.User` scopes `User` as an enum
-  variant, as `Color.Red` does.
+- Outside `def` headers, type aliases and typed bindings (`x: Models.User = ...`), `Models.User` scopes `User` as an enum
+  variant, as `Color.Red` does: in an expression the two look the same.
 - An all-caps name such as `TIMEOUT_MS` is scoped as a constant, so an all-caps type name (`URL`) is too.
 
 ## License

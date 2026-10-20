@@ -188,7 +188,8 @@
               },
               "end": "(?=#)|$",
               "patterns": [{ "include": "#type-expression" }]
-            }
+            },
+            { "include": "#type-expression" }
           ]
         },
         {
@@ -439,12 +440,6 @@
           }
         },
         {
-          "match": "\\b[A-Z][A-Za-z0-9_]*(?:\\.[A-Z][A-Za-z0-9_]*)+(?=\\[)",
-          "captures": {
-            "0": { "patterns": [{ "include": "#types" }, { "include": "#punctuation" }] }
-          }
-        },
-        {
           "match": "\\b([A-Z][A-Za-z0-9_]*)((?:\\.[A-Z][A-Za-z0-9_]*)*)(\\.)([A-Z][A-Za-z0-9_]*)\\b",
           "captures": {
             "1": {
@@ -541,11 +536,13 @@
     "bindings": {
       "patterns": [
         {
-          "match": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)(?=[^=<>!\"#|]*=(?!=))",
-          "captures": {
+          "begin": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)(?=[^=<>!\"#|]*=(?!=))",
+          "beginCaptures": {
             "1": { "name": "variable.other.readwrite.agentica" },
             "2": { "name": "punctuation.separator.type.agentica" }
-          }
+          },
+          "end": "(?==)",
+          "patterns": [{ "include": "#type-expression" }]
         },
         {
           "match": "\\b([a-z_][A-Za-z0-9_]*)\\s*(:)(?=\\s)",

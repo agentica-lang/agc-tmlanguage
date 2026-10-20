@@ -1,4 +1,4 @@
-# SYNTAX TEST "source.agentica" "cases from the tree-sitter-agentica corpus"
+# SYNTAX TEST "source.agentica" "type positions and cases from the tree-sitter-agentica corpus"
 
 def f(a: Map[String, List[Int]], b: Models.User) -> Result[Domain.Option[Int]] # types
 #                                   ^^^^^^ entity.name.type.agentica
@@ -32,8 +32,10 @@ def main() -> Void # trailing
   o = Domain.Option.Some(1)
 #            ^^^^^^ entity.name.type.agentica
 #                   ^^^^ variable.other.enummember.agentica
-  w = Wrap.Box[0]
-#          ^^^ entity.name.type.agentica
+  receiver: Ast.Optional[Ast.Expr] = Ast.Optional.Absent
+#               ^^^^^^^^ entity.name.type.agentica - variable.other.enummember.agentica
+#                            ^^^^ entity.name.type.agentica - variable.other.enummember.agentica
+#                                                 ^^^^^^ variable.other.enummember.agentica
   IO.puts(IO.gets!)
 #            ^^^^^ entity.name.function.agentica
   e = &Util.f!=x
