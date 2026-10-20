@@ -21,6 +21,9 @@ npm run package                 # writes agentica-0.1.0.vsix
 code --install-extension agentica-0.1.0.vsix
 ```
 
+The indentation rules are line patterns: a case arm whose body starts on the next line is not indented, and lines
+inside a heredoc body count like code.
+
 ## Development
 
 ```sh
