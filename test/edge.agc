@@ -36,3 +36,16 @@ m = {"a": 1, "b": [2, 3]}
 export def run() -> Void
 # <------ keyword.control.export.agentica
 end
+
+r = run(
+  limit: a <= b,
+# ^^^^^ variable.parameter.named.agentica
+  strict: a != b,
+# ^^^^^^ variable.parameter.named.agentica
+)
+v = Models.Shape.Circle
+#   ^^^^^^ entity.name.type.agentica
+#         ^ punctuation.accessor.agentica
+#          ^^^^^ entity.name.type.agentica
+#               ^ punctuation.accessor.agentica
+#                ^^^^^^ variable.other.enummember.agentica

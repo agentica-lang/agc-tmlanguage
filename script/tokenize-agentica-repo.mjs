@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const grammarPath = join(root, "syntaxes", "agentica.tmLanguage.json");
 
-export async function loadGrammar() {
+async function loadGrammar() {
   const wasm = readFileSync(require.resolve("vscode-oniguruma/release/onig.wasm"));
   await oniguruma.loadWASM(wasm.buffer.slice(wasm.byteOffset, wasm.byteOffset + wasm.byteLength));
   const registry = new textmate.Registry({
@@ -26,7 +26,7 @@ export async function loadGrammar() {
   return registry.loadGrammar("source.agentica");
 }
 
-export function tokenize(grammar, text) {
+function tokenize(grammar, text) {
   let stack = textmate.INITIAL;
   const lines = text.replace(/\r\n?/g, "\n").replace(/\n$/, "").split("\n");
   const result = [];
@@ -82,6 +82,7 @@ function siteBlocks(repo) {
         block.lines.push(line);
       }
     });
+    if (block !== null && !block.skip) blocks.push({ name: block.name, text: block.lines.join("\n") });
     return blocks;
   });
 }
@@ -94,7 +95,7 @@ async function main() {
   }
   const grammar = await loadGrammar();
   const invalid = intentionallyInvalid(repo);
-  const dirs = ["examples", "stdlib", "tests/fixtures", "tests/bdd"].map((dir) => join(repo, dir));
+  const dirs = ["compiler", "examples", "stdlib", "tests/fixtures", "tests/bdd"].map((dir) => join(repo, dir));
   const sources = dirs
     .flatMap((dir) => walk(dir, (path) => path.endsWith(".agc")))
     .filter((path) => !invalid.has(path))
@@ -106,6 +107,4 @@ async function main() {
   process.exit(failures.length === 0 ? 0 : 1);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  await main();
-}
+await main();

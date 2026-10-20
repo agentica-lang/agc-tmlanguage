@@ -99,7 +99,7 @@
       "patterns": [
         {
           "name": "meta.heredoc.agentica",
-          "begin": "(?=<<~[A-Z][A-Z0-9_]*.*?<<~([A-Z][A-Z0-9_]*))",
+          "begin": "(?=<<~[A-Z][A-Z0-9_]*(?:[^#\"]|\"(?:[^\"\\\\]|\\\\.)*\")*?<<~([A-Z][A-Z0-9_]*))",
           "end": "^\\s*(\\1)$",
           "endCaptures": {
             "1": { "name": "string.unquoted.heredoc.agentica punctuation.definition.string.end.agentica" }
@@ -250,7 +250,27 @@
               }
             },
             {
-              "match": "\\b(from|as)\\b",
+              "begin": "\\{",
+              "beginCaptures": {
+                "0": { "name": "punctuation.section.braces.begin.agentica" }
+              },
+              "end": "\\}",
+              "endCaptures": {
+                "0": { "name": "punctuation.section.braces.end.agentica" }
+              },
+              "patterns": [
+                { "include": "#comments" },
+                {
+                  "match": "\\bas\\b(?=\\s+[A-Za-z_])",
+                  "name": "keyword.control.import.agentica"
+                },
+                { "include": "#types" },
+                { "include": "#punctuation" },
+                { "include": "#identifiers" }
+              ]
+            },
+            {
+              "match": "\\bfrom\\b",
               "name": "keyword.control.import.agentica"
             },
             { "include": "#string" },
@@ -396,7 +416,12 @@
               "name": "entity.name.type.agentica",
               "patterns": [{ "include": "#builtin-types" }]
             },
-            "2": { "name": "entity.name.type.agentica" },
+            "2": {
+              "patterns": [
+                { "include": "#types" },
+                { "include": "#punctuation" }
+              ]
+            },
             "3": { "name": "punctuation.accessor.agentica" },
             "4": { "name": "variable.other.enummember.agentica" }
           }
@@ -459,7 +484,7 @@
     "bindings": {
       "patterns": [
         {
-          "match": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)(?=[^=]*=(?!=))",
+          "match": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)(?=[^=<>!]*=(?!=))",
           "captures": {
             "1": { "name": "variable.other.readwrite.agentica" },
             "2": { "name": "punctuation.separator.type.agentica" }

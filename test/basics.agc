@@ -12,6 +12,21 @@ import {parse, Item as Entry} from "items"
 #                   ^^ keyword.control.import.agentica
 #                      ^^^^^ entity.name.type.agentica
 
+import {
+#      ^ punctuation.section.braces.begin.agentica
+  BARE, Square as Sq, # names
+# ^^^^ entity.name.type.agentica
+#       ^^^^^^ entity.name.type.agentica
+#              ^^ keyword.control.import.agentica
+#                 ^^ entity.name.type.agentica
+#                     ^^^^^^^ comment.line.number-sign.agentica
+  as,
+# ^^ variable.other.readwrite.agentica - keyword
+} from "builtins"
+# <- punctuation.section.braces.end.agentica
+# ^^^^ keyword.control.import.agentica
+#      ^^^^^^^^^^ string.quoted.double.agentica
+
 LIMIT = 10
 # <----- variable.other.constant.agentica
 #       ^^ constant.numeric.integer.agentica

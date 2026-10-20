@@ -13,6 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: sonic182/agentica
+          ref: 3a20011922fde486662269bd6341800897485cb9
           path: agentica
       - uses: actions/setup-node@v4
         with:

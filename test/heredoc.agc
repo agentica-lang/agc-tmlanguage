@@ -38,3 +38,25 @@ def two() -> Int
   return 1
 # ^^^^^^ keyword.control.return.agentica - string.agentica
 end
+
+def hidden() -> String
+  a = <<~TEXT # like <<~EOF
+#             ^^^^^^^^^^^^^ comment.line.number-sign.agentica
+    one
+  TEXT
+# ^^^^ punctuation.definition.string.end.agentica
+  b = f(<<~SRC, "<<~X")
+#               ^^^^^^ string.quoted.double.agentica
+    two
+  SRC
+# ^^^ punctuation.definition.string.end.agentica
+  c = g(<<~ONE, "x", <<~TWO)
+#                    ^^^^^^ punctuation.definition.string.begin.agentica
+    three
+  ONE
+    four
+  TWO
+# ^^^ punctuation.definition.string.end.agentica
+  return a
+# ^^^^^^ keyword.control.return.agentica - string
+end
