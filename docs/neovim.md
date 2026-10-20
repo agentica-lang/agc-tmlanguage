@@ -14,16 +14,18 @@ vim.filetype.add({ extension = { agc = 'agentica' } })
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'agentica',
-  callback = function() vim.treesitter.start() end,
+  callback = function() pcall(vim.treesitter.start) end,
 })
 ```
 
-Then install the parser and its queries in one of the two ways below.
+Then install the parser and its queries in one of the two ways below. Until then, `.agc` files open without
+highlighting; `pcall` keeps the missing parser from raising an error.
 
 ### With nvim-treesitter
 
-Register the parser in a `User TSUpdate` autocommand, then run `:TSInstall agentica`. nvim-treesitter needs `curl`,
-`tar`, a C compiler and tree-sitter-cli to build it.
+This uses the API of nvim-treesitter's `main` branch; its frozen `master` branch registers parsers differently. Register
+the parser in a `User TSUpdate` autocommand, then run `:TSInstall agentica`. nvim-treesitter needs `curl`, `tar`, a C
+compiler and tree-sitter-cli to build it. `branch = 'master'` below is the branch of tree-sitter-agentica.
 
 ```lua
 vim.api.nvim_create_autocmd('User', {
@@ -42,7 +44,8 @@ vim.api.nvim_create_autocmd('User', {
 
 ### Without nvim-treesitter
 
-Build the parser with tree-sitter-cli and copy the queries to the `site` directory of Neovim's data path:
+This needs `git`, a C compiler and tree-sitter-cli. Build the parser and copy the queries to the `site` directory of
+Neovim's data path (Linux and macOS shown; on Windows the parser is `parser/agentica.dll`):
 
 ```sh
 git clone https://github.com/agentica-lang/tree-sitter-agentica
@@ -53,7 +56,7 @@ tree-sitter build -o "$site/parser/agentica.so"
 cp queries/*.scm "$site/queries/agentica/"
 ```
 
-Repeat these steps to update the parser.
+To update, run `git pull` in the clone, then repeat the `tree-sitter build` and `cp` lines.
 
 ## Diagnostics
 
