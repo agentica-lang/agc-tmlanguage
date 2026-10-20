@@ -9,6 +9,8 @@ The grammar is [`syntaxes/agentica.tmLanguage.json`](syntaxes/agentica.tmLanguag
 `source.agentica` for `.agc` files. It is tested with vscode-textmate, the engine of VS Code and Shiki. Sublime Text
 and `bat` read `.sublime-syntax` files, so they need a converted copy.
 
+Neovim highlights with tree-sitter instead; see [docs/neovim.md](docs/neovim.md) for its setup.
+
 ## Development
 
 ```sh
