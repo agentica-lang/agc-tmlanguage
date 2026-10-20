@@ -6,7 +6,8 @@ Tracked in [sonic182/agentica#347](https://github.com/sonic182/agentica/issues/3
 > **Status:** early stage. The grammar is usable; editor packaging is not done yet.
 
 The grammar is [`syntaxes/agentica.tmLanguage.json`](syntaxes/agentica.tmLanguage.json), with scope name
-`source.agentica` for `.agc` files. Any TextMate-compatible highlighter can load it (VS Code, Shiki, Sublime Text, `bat`).
+`source.agentica` for `.agc` files. It is tested with vscode-textmate, the engine of VS Code and Shiki. Sublime Text
+and `bat` read `.sublime-syntax` files, so they need a converted copy.
 
 ## Development
 
@@ -32,6 +33,7 @@ A TextMate grammar matches lines with regular expressions, so it approximates th
 - Only one or two heredocs may open on the same line.
 - A map key written as a bare name (`{a: 1}`) is scoped like a named argument.
 - `Models.User` in a type position scopes `User` as an enum variant, as `Color.Red` does.
+- An all-caps name such as `TIMEOUT_MS` is scoped as a constant, so an all-caps type name (`URL`) is too.
 
 ## License
 

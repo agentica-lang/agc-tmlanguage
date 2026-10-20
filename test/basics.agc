@@ -15,7 +15,7 @@ import {parse, Item as Entry} from "items"
 import {
 #      ^ punctuation.section.braces.begin.agentica
   BARE, Square as Sq, # names
-# ^^^^ entity.name.type.agentica
+# ^^^^ variable.other.constant.agentica
 #       ^^^^^^ entity.name.type.agentica
 #              ^^ keyword.control.import.agentica
 #                 ^^ entity.name.type.agentica

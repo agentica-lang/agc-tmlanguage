@@ -26,16 +26,12 @@ async function loadGrammar() {
   return registry.loadGrammar("source.agentica");
 }
 
-function tokenize(grammar, text) {
+function finalDepth(grammar, text) {
   let stack = textmate.INITIAL;
-  const lines = text.replace(/\r\n?/g, "\n").replace(/\n$/, "").split("\n");
-  const result = [];
-  for (const line of lines) {
-    const { tokens, ruleStack } = grammar.tokenizeLine(line, stack);
-    result.push({ line, tokens });
-    stack = ruleStack;
+  for (const line of text.replace(/\r\n?/g, "\n").replace(/\n$/, "").split("\n")) {
+    stack = grammar.tokenizeLine(line, stack).ruleStack;
   }
-  return { lines: result, depth: stack.depth };
+  return stack.depth;
 }
 
 function walk(dir, keep) {
@@ -101,7 +97,11 @@ async function main() {
     .filter((path) => !invalid.has(path))
     .map((path) => ({ name: relative(repo, path), text: readFileSync(path, "utf8") }))
     .concat(siteBlocks(repo).map((block) => ({ ...block, name: relative(repo, block.name) })));
-  const failures = sources.filter((source) => tokenize(grammar, source.text).depth !== 1);
+  if (sources.length === 0) {
+    console.error(`no sources found in ${repo}`);
+    process.exit(1);
+  }
+  const failures = sources.filter((source) => finalDepth(grammar, source.text) !== 1);
   for (const source of failures) console.error(`unclosed rule at end of source: ${source.name}`);
   console.log(`${sources.length - failures.length}/${sources.length} sources end at the root rule`);
   process.exit(failures.length === 0 ? 0 : 1);

@@ -49,3 +49,24 @@ v = Models.Shape.Circle
 #          ^^^^^ entity.name.type.agentica
 #               ^ punctuation.accessor.agentica
 #                ^^^^^^ variable.other.enummember.agentica
+
+def scan(rows: List[Int]) -> Void
+  for row in rows do
+    case row
+      0 -> next
+#          ^^^^ keyword.control.loop.agentica
+      1 -> break # done
+#          ^^^^^ keyword.control.loop.agentica
+      n -> step = next
+#                 ^^^^ variable.other.readwrite.agentica - keyword
+    end
+  end
+  q = request(
+    query: "a=b",
+#   ^^^^^ variable.parameter.named.agentica
+    limit: 5, # default = 30
+#   ^^^^^ variable.parameter.named.agentica
+    wait: TIMEOUT_MS,
+#         ^^^^^^^^^^ variable.other.constant.agentica
+  )
+end
