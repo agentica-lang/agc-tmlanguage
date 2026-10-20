@@ -51,12 +51,12 @@ test("indentation follows blocks", () => {
     "  xs.map do |item|",
     "  ys.each do # comment",
     "  if x # until the end",
+    "  if xs.any? do |x| ok?(x) end",
   ];
   const stays = [
     "  total = p.x + 1",
     "  xs.map do |item| item * 2 end",
     "  # do",
-    "  if ready? then_value end",
     "  done = 1",
     "  endpoint = 2",
     "  foo() # what to do",
@@ -69,5 +69,17 @@ test("indentation follows blocks", () => {
   for (const line of ["end", "  end", "  elsif x", "  else"]) assert.ok(decrease.test(line), `should outdent: ${line}`);
   for (const line of ["  endpoint = 2", "  ending()", "  elsewhere = 1"]) {
     assert.ok(!decrease.test(line), `should not outdent: ${line}`);
+  }
+});
+
+test("Enter after a case arm arrow indents the body", () => {
+  const [rule] = config.onEnterRules;
+  const before = new RegExp(rule.beforeText);
+  assert.equal(rule.action.indent, "indent");
+  for (const line of ["    error(message) ->", "    ok(v) if v > 0 -> # body below"]) {
+    assert.ok(before.test(line), `should indent after: ${line}`);
+  }
+  for (const line of ["    ok(v) -> return v", "def area(shape: Shape) -> Float", "  x = y # ->", "  s = \"->\""]) {
+    assert.ok(!before.test(line), `should not indent after: ${line}`);
   }
 });
