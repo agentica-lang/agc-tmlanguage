@@ -14,13 +14,25 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Programming Languages"],
+  "categories": [
+    "Programming Languages"
+  ],
+  "files": [
+    "LICENSE",
+    "language-configuration.json",
+    "syntaxes/agentica.tmLanguage.json"
+  ],
   "contributes": {
     "languages": [
       {
         "id": "agentica",
-        "aliases": ["Agentica", "agentica"],
-        "extensions": [".agc"],
+        "aliases": [
+          "Agentica",
+          "agentica"
+        ],
+        "extensions": [
+          ".agc"
+        ],
         "configuration": "./language-configuration.json"
       }
     ],

@@ -7,17 +7,21 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (path) => JSON.parse(readFileSync(join(root, path), "utf8"));
 const manifest = readJson("package.json");
-const [language] = manifest.contributes.languages;
-const [grammar] = manifest.contributes.grammars;
+const { languages, grammars } = manifest.contributes;
+const [language] = languages;
+const [grammar] = grammars;
 const config = readJson(language.configuration);
 
 test("the manifest points at the grammar and the language configuration", () => {
+  assert.equal(languages.length, 1);
+  assert.equal(grammars.length, 1);
   assert.equal(language.id, "agentica");
   assert.deepEqual(language.extensions, [".agc"]);
   assert.equal(grammar.language, language.id);
   assert.ok(existsSync(join(root, language.configuration)));
   assert.ok(existsSync(join(root, grammar.path)));
   assert.equal(readJson(grammar.path).scopeName, grammar.scopeName);
+  for (const path of manifest.files) assert.ok(existsSync(join(root, path)), `packaged file missing: ${path}`);
 });
 
 test("line comments use #", () => {
@@ -27,6 +31,7 @@ test("line comments use #", () => {
 test("words keep the ? and ! suffix", () => {
   const word = new RegExp(config.wordPattern, "g");
   assert.deepEqual("done? = gets!() + Item.size(1_000.5)".match(word), ["done?", "gets!", "Item", "size", "1_000.5"]);
+  assert.deepEqual("ok = a!=b".match(word), ["ok", "a", "b"]);
 });
 
 test("indentation follows blocks", () => {
@@ -45,6 +50,9 @@ test("indentation follows blocks", () => {
     "  case shape",
     "  xs.map do |item|",
     "  ys.each do # comment",
+    "  if x # until the end",
+    "    error(message) ->",
+    "    ok(v) if v > 0 -> # body below",
   ];
   const stays = [
     "  total = p.x + 1",
@@ -53,6 +61,10 @@ test("indentation follows blocks", () => {
     "  if ready? then_value end",
     "  done = 1",
     "  endpoint = 2",
+    "  foo() # what to do",
+    "  label = \"to do\"",
+    "    ok(v) -> return v",
+    "  x = y # ->",
   ];
   for (const line of opens) assert.ok(increase.test(line), `should indent after: ${line}`);
   for (const line of stays) assert.ok(!increase.test(line), `should not indent after: ${line}`);

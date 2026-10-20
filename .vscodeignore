@@ -1,7 +1,0 @@
-.github/**
-node_modules/**
-script/**
-test/**
-.gitignore
-package-lock.json
-*.vsix
