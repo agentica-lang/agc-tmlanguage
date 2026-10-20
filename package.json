@@ -1,0 +1,17 @@
+{
+  "name": "agc-tmlanguage",
+  "version": "0.1.0",
+  "description": "TextMate grammar for Agentica",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vscode-tmgrammar-test -g syntaxes/agentica.tmLanguage.json \"test/**/*.agc\"",
+    "test:repo": "node script/tokenize-agentica-repo.mjs"
+  },
+  "devDependencies": {
+    "vscode-oniguruma": "2.0.1",
+    "vscode-textmate": "9.3.2",
+    "vscode-tmgrammar-test": "0.1.3"
+  }
+}
