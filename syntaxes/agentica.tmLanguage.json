@@ -150,27 +150,46 @@
       "patterns": [
         {
           "name": "meta.function.agentica",
-          "begin": "\\b(def)\\s+([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?)\\s*(\\()",
+          "begin": "\\b(def)\\s+([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?)",
           "beginCaptures": {
             "1": { "name": "storage.type.function.agentica" },
-            "2": { "name": "entity.name.function.agentica" },
-            "3": { "name": "punctuation.definition.parameters.begin.agentica" }
+            "2": { "name": "entity.name.function.agentica" }
           },
-          "end": "\\)",
-          "endCaptures": {
-            "0": { "name": "punctuation.definition.parameters.end.agentica" }
-          },
+          "end": "(?=#)|$",
           "patterns": [
-            { "include": "#comments" },
             {
-              "match": "\\b([a-z_][A-Za-z0-9_]*)\\s*(:)",
-              "captures": {
-                "1": { "name": "variable.parameter.agentica" },
-                "2": { "name": "punctuation.separator.type.agentica" }
-              }
+              "begin": "\\(",
+              "beginCaptures": {
+                "0": { "name": "punctuation.definition.parameters.begin.agentica" }
+              },
+              "end": "\\)",
+              "endCaptures": {
+                "0": { "name": "punctuation.definition.parameters.end.agentica" }
+              },
+              "patterns": [
+                { "include": "#comments" },
+                {
+                  "begin": "(?:^\\s*)?\\b([a-z_][A-Za-z0-9_]*)\\s*(:)",
+                  "beginCaptures": {
+                    "1": { "name": "variable.parameter.agentica" },
+                    "2": { "name": "punctuation.separator.type.agentica" }
+                  },
+                  "end": "(?=[,)=])",
+                  "patterns": [{ "include": "#type-expression" }]
+                },
+                { "include": "#parens" },
+                { "include": "$self" }
+              ]
             },
-            { "include": "#parens" },
-            { "include": "$self" }
+            {
+              "begin": "->",
+              "beginCaptures": {
+                "0": { "name": "keyword.operator.arrow.agentica" }
+              },
+              "end": "(?=#)|$",
+              "patterns": [{ "include": "#type-expression" }]
+            },
+            { "include": "#type-expression" }
           ]
         },
         {
@@ -221,12 +240,17 @@
           ]
         },
         {
-          "match": "^\\s*(?:(export)\\s+)?(type)\\s+([A-Z][A-Za-z0-9_]*)",
-          "captures": {
+          "begin": "^\\s*(?:(export)\\s+)?(type)\\s+([A-Z][A-Za-z0-9_]*)",
+          "beginCaptures": {
             "1": { "name": "keyword.control.export.agentica" },
             "2": { "name": "storage.type.type.agentica" },
             "3": { "name": "entity.name.type.alias.agentica" }
-          }
+          },
+          "end": "(?=#)|$",
+          "patterns": [
+            { "match": "=", "name": "keyword.operator.assignment.agentica" },
+            { "include": "#type-expression" }
+          ]
         },
         {
           "match": "^\\s*(?:(export)\\s+)?([A-Z][A-Za-z0-9_]*)\\s*(?=(?::[^=]*)?=(?!=))",
@@ -474,6 +498,24 @@
         }
       ]
     },
+    "type-expression": {
+      "patterns": [
+        { "include": "#comments" },
+        {
+          "begin": "\\[",
+          "beginCaptures": {
+            "0": { "name": "punctuation.section.brackets.begin.agentica" }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.brackets.end.agentica" }
+          },
+          "patterns": [{ "include": "#type-expression" }]
+        },
+        { "include": "#types" },
+        { "include": "#punctuation" }
+      ]
+    },
     "builtin-types": {
       "match": "\\b(Int|Float|Bool|String|Nil|Void|List|Map|Set|Result|Range|Fn|Json|JSON|Task|Await|Channel|Process|ProcessOutput|IO|System|Time|Random|Test|TestCase|File|Dir|Path|FileHandle|FileInfo|TCP|TLS|HttpWire|LogRegistry|LogEvent|LogLevel|Socket|Listener|HttpClient|HttpServer|Header|HttpRequest|HttpResponse|HttpClientOptions|HttpServerOptions)\\b",
       "name": "support.type.builtin.agentica"
@@ -494,11 +536,13 @@
     "bindings": {
       "patterns": [
         {
-          "match": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)(?=[^=<>!\"#|]*=(?!=))",
-          "captures": {
+          "begin": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)(?=[^=<>!\"#|]*=(?!=))",
+          "beginCaptures": {
             "1": { "name": "variable.other.readwrite.agentica" },
             "2": { "name": "punctuation.separator.type.agentica" }
-          }
+          },
+          "end": "(?==)",
+          "patterns": [{ "include": "#type-expression" }]
         },
         {
           "match": "\\b([a-z_][A-Za-z0-9_]*)\\s*(:)(?=\\s)",
