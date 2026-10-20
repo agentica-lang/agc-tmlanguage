@@ -70,3 +70,8 @@ def scan(rows: List[Int]) -> Void
 #         ^^^^^^^^^^ variable.other.constant.agentica
   )
 end
+
+on(
+  handler: do |x| y = x end,
+# ^^^^^^^ variable.parameter.named.agentica
+)

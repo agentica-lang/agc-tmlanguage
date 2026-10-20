@@ -1,6 +1,5 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { createRequire } from "node:module";
-import { homedir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import oniguruma from "vscode-oniguruma";
@@ -26,12 +25,14 @@ async function loadGrammar() {
   return registry.loadGrammar("source.agentica");
 }
 
-function finalDepth(grammar, text) {
+function openRuleLine(grammar, text) {
   let stack = textmate.INITIAL;
-  for (const line of text.replace(/\r\n?/g, "\n").replace(/\n$/, "").split("\n")) {
+  const lines = text.replace(/\r\n?/g, "\n").replace(/\n$/, "").split("\n");
+  for (const [index, line] of lines.entries()) {
+    if (stack.depth !== 1 && /^(export\s+)?(def|struct|enum|type)\s/.test(line)) return index + 1;
     stack = grammar.tokenizeLine(line, stack).ruleStack;
   }
-  return stack.depth;
+  return stack.depth === 1 ? null : "end";
 }
 
 function walk(dir, keep) {
@@ -57,7 +58,7 @@ function intentionallyInvalid(repo) {
     }
   }
   for (const golden of goldens(".linked")) {
-    const file = firstLine(golden).match(/^ERROR (?:LEX-|PARSE-).* file="([^"]+)"/)?.[1];
+    const file = firstLine(golden).match(/^ERROR (?:LEX-|PARSE-(?!GHERKIN-)).* file="([^"]+)"/)?.[1];
     if (file) invalid.add(join(golden.slice(0, -".linked".length), file));
   }
   return invalid;
@@ -84,7 +85,7 @@ function siteBlocks(repo) {
 }
 
 async function main() {
-  const repo = resolve(process.argv[2] ?? process.env.AGENTICA_REPO ?? join(homedir(), "apps", "agentica"));
+  const repo = resolve(process.argv[2] ?? process.env.AGENTICA_REPO ?? join(root, "..", "agentica"));
   if (!existsSync(join(repo, "examples"))) {
     console.error(`not an Agentica checkout: ${repo}`);
     process.exit(2);
@@ -101,9 +102,11 @@ async function main() {
     console.error(`no sources found in ${repo}`);
     process.exit(1);
   }
-  const failures = sources.filter((source) => finalDepth(grammar, source.text) !== 1);
-  for (const source of failures) console.error(`unclosed rule at end of source: ${source.name}`);
-  console.log(`${sources.length - failures.length}/${sources.length} sources end at the root rule`);
+  const failures = sources
+    .map((source) => ({ name: source.name, line: openRuleLine(grammar, source.text) }))
+    .filter((failure) => failure.line !== null);
+  for (const { name, line } of failures) console.error(`rule still open at ${name}:${line}`);
+  console.log(`${sources.length - failures.length}/${sources.length} sources close every rule`);
   process.exit(failures.length === 0 ? 0 : 1);
 }
 

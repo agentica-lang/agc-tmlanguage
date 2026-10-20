@@ -22,7 +22,8 @@ comment line asserts the scopes of the characters above its carets.
 
 `test:repo` tokenizes every `.agc` file in `compiler/`, `examples/`, `stdlib/`, `tests/fixtures/` and `tests/bdd/` of the
 [Agentica repository](https://github.com/sonic182/agentica), and every `agentica` code block in `site/content/`. It
-fails when a source ends inside an open rule, such as an unterminated heredoc. The path defaults to `~/apps/agentica`;
+fails when a source ends inside an open rule, such as an unterminated heredoc, or when a rule is still open at a
+top-level `def`, `struct`, `enum` or `type` line. The path defaults to `../agentica`;
 `AGENTICA_REPO` also sets it. CI checks a pinned Agentica commit (`ref` in
 `.github/workflows/ci.yml`); bump it on purpose. Fixtures that are invalid on purpose (a `LEX-` or `PARSE-` golden) are skipped.
 
@@ -30,7 +31,8 @@ fails when a source ends inside an open rule, such as an unterminated heredoc. T
 
 A TextMate grammar matches lines with regular expressions, so it approximates the language:
 
-- Only one or two heredocs may open on the same line.
+- Only one or two heredocs may open on the same line. When two do, a line of the second body that starts at column 0
+  with `<<~NAME` opens a new heredoc.
 - A map key written as a bare name (`{a: 1}`) is scoped like a named argument.
 - `Models.User` in a type position scopes `User` as an enum variant, as `Color.Red` does.
 - An all-caps name such as `TIMEOUT_MS` is scoped as a constant, so an all-caps type name (`URL`) is too.

@@ -494,7 +494,7 @@
     "bindings": {
       "patterns": [
         {
-          "match": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)(?=[^=<>!\"#]*=(?!=))",
+          "match": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)(?=[^=<>!\"#|]*=(?!=))",
           "captures": {
             "1": { "name": "variable.other.readwrite.agentica" },
             "2": { "name": "punctuation.separator.type.agentica" }

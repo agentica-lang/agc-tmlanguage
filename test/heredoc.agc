@@ -60,3 +60,12 @@ def hidden() -> String
   return a
 # ^^^^^^ keyword.control.return.agentica - string
 end
+
+def help() -> String
+  text = <<~TEXT
+#        ^^^^^^^ punctuation.definition.string.begin.agentica
+    Usage: tool
+#   ^^^^^^^^^^^ string.unquoted.heredoc.agentica
+  TEXT
+  return text
+end
