@@ -65,6 +65,7 @@ test("indentation follows blocks", () => {
     "    ok(v) -> return v",
     "    error(message) ->",
     "  )",
+    "    ) -> return v",
   ];
   for (const line of opens) assert.ok(increase.test(line), `should indent after: ${line}`);
   for (const line of stays) assert.ok(!increase.test(line), `should not indent after: ${line}`);

@@ -15,8 +15,7 @@ Neovim highlights with tree-sitter instead; see [docs/neovim.md](docs/neovim.md)
 
 The repository is also a VS Code extension: the grammar plus a language configuration (`#` comments, bracket pairs,
 indentation after `def`, `if`, `do`, the other block openers and the `) -> Type` line that closes a multi-line `def`
-header, and words that keep a `?` or `!` suffix). It is not on
-a marketplace yet; build and install it from a checkout:
+header, and words that keep a `?` or `!` suffix). It is not on a marketplace yet; build and install it from a checkout:
 
 ```sh
 npm ci
