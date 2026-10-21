@@ -14,14 +14,16 @@ Neovim highlights with tree-sitter instead; see [docs/neovim.md](docs/neovim.md)
 ## VS Code
 
 The repository is also a VS Code extension: the grammar plus a language configuration (`#` comments, bracket pairs,
-indentation after `def`, `if`, `do` and the other block openers, and words that keep a `?` or `!` suffix). It is not on
-a marketplace yet; build and install it from a checkout:
+indentation after `def`, `if`, `do`, the other block openers and the `) -> Type` line that closes a multi-line `def`
+header, and words that keep a `?` or `!` suffix). It is not on a marketplace yet; build and install it from a checkout:
 
 ```sh
 npm ci
 npm run package                 # writes agentica-0.1.0.vsix
 code --install-extension agentica-0.1.0.vsix
 ```
+
+CI also uploads the `.vsix` of each run as the `agentica-vsix` artifact.
 
 The indentation rules are line patterns. Enter after a case arm's `->` indents the body, but nothing outdents the next
 arm; lines inside a heredoc body count like code.
