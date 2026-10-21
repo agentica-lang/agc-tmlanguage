@@ -25,3 +25,4 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run test:repo -- agentica
+      - run: npm run package -- --out agentica.vsix

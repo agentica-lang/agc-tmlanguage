@@ -1,0 +1,72 @@
+{
+  "comments": {
+    "lineComment": "#"
+  },
+  "brackets": [
+    [
+      "(",
+      ")"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "{",
+      "}"
+    ]
+  ],
+  "autoClosingPairs": [
+    {
+      "open": "(",
+      "close": ")"
+    },
+    {
+      "open": "[",
+      "close": "]"
+    },
+    {
+      "open": "{",
+      "close": "}"
+    },
+    {
+      "open": "\"",
+      "close": "\"",
+      "notIn": [
+        "string",
+        "comment"
+      ]
+    }
+  ],
+  "surroundingPairs": [
+    [
+      "(",
+      ")"
+    ],
+    [
+      "[",
+      "]"
+    ],
+    [
+      "{",
+      "}"
+    ],
+    [
+      "\"",
+      "\""
+    ]
+  ],
+  "wordPattern": "[a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?|[A-Z][A-Za-z0-9_]*|\\d(?:_?\\d)*(?:\\.\\d(?:_?\\d)*)?",
+  "indentationRules": {
+    "increaseIndentPattern": "^\\s*(?:(?:export\\s+)?(?:def|struct|enum)\\b|if\\b|elsif\\b|else\\b|while\\b|for\\b|case\\b)|^(?!\\s*#)(?:[^#\"]|\"(?:[^\"\\\\]|\\\\.)*\")*\\bdo(?:\\s*\\|[^|]*\\|)?\\s*(?:#.*)?$",
+    "decreaseIndentPattern": "^\\s*(?:end|elsif|else)\\b"
+  },
+  "onEnterRules": [
+    {
+      "beforeText": "^(?!\\s*#)(?:[^#\"]|\"(?:[^\"\\\\]|\\\\.)*\")*->\\s*(?:#.*)?$",
+      "action": {
+        "indent": "indent"
+      }
+    }
+  ]
+}

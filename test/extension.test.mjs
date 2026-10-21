@@ -1,0 +1,85 @@
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { test } from "node:test";
+import { fileURLToPath } from "node:url";
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const readJson = (path) => JSON.parse(readFileSync(join(root, path), "utf8"));
+const manifest = readJson("package.json");
+const { languages, grammars } = manifest.contributes;
+const [language] = languages;
+const [grammar] = grammars;
+const config = readJson(language.configuration);
+
+test("the manifest points at the grammar and the language configuration", () => {
+  assert.equal(languages.length, 1);
+  assert.equal(grammars.length, 1);
+  assert.equal(language.id, "agentica");
+  assert.deepEqual(language.extensions, [".agc"]);
+  assert.equal(grammar.language, language.id);
+  assert.ok(existsSync(join(root, language.configuration)));
+  assert.ok(existsSync(join(root, grammar.path)));
+  assert.equal(readJson(grammar.path).scopeName, grammar.scopeName);
+  for (const path of manifest.files) assert.ok(existsSync(join(root, path)), `packaged file missing: ${path}`);
+});
+
+test("line comments use #", () => {
+  assert.equal(config.comments.lineComment, "#");
+});
+
+test("words keep the ? and ! suffix", () => {
+  const word = new RegExp(config.wordPattern, "g");
+  assert.deepEqual("done? = gets!() + Item.size(1_000.5)".match(word), ["done?", "gets!", "Item", "size", "1_000.5"]);
+  assert.deepEqual("ok = a!=b".match(word), ["ok", "a", "b"]);
+});
+
+test("indentation follows blocks", () => {
+  const increase = new RegExp(config.indentationRules.increaseIndentPattern);
+  const decrease = new RegExp(config.indentationRules.decreaseIndentPattern);
+  const opens = [
+    "def area(shape: Shape) -> Float",
+    "export def run() -> Void",
+    "struct Point",
+    "enum Shape[T]",
+    "  if total > 10",
+    "  elsif ready?",
+    "  else",
+    "  while xs.any? do",
+    "  for x in xs do",
+    "  case shape",
+    "  xs.map do |item|",
+    "  ys.each do # comment",
+    "  if x # until the end",
+    "  if xs.any? do |x| ok?(x) end",
+  ];
+  const stays = [
+    "  total = p.x + 1",
+    "  xs.map do |item| item * 2 end",
+    "  # do",
+    "  done = 1",
+    "  endpoint = 2",
+    "  foo() # what to do",
+    "  label = \"to do\"",
+    "    ok(v) -> return v",
+    "    error(message) ->",
+  ];
+  for (const line of opens) assert.ok(increase.test(line), `should indent after: ${line}`);
+  for (const line of stays) assert.ok(!increase.test(line), `should not indent after: ${line}`);
+  for (const line of ["end", "  end", "  elsif x", "  else"]) assert.ok(decrease.test(line), `should outdent: ${line}`);
+  for (const line of ["  endpoint = 2", "  ending()", "  elsewhere = 1"]) {
+    assert.ok(!decrease.test(line), `should not outdent: ${line}`);
+  }
+});
+
+test("Enter after a case arm arrow indents the body", () => {
+  const [rule] = config.onEnterRules;
+  const before = new RegExp(rule.beforeText);
+  assert.equal(rule.action.indent, "indent");
+  for (const line of ["    error(message) ->", "    ok(v) if v > 0 -> # body below"]) {
+    assert.ok(before.test(line), `should indent after: ${line}`);
+  }
+  for (const line of ["    ok(v) -> return v", "def area(shape: Shape) -> Float", "  x = y # ->", "  s = \"->\""]) {
+    assert.ok(!before.test(line), `should not indent after: ${line}`);
+  }
+});

@@ -3,7 +3,7 @@
 A TextMate grammar (syntax highlighting) for [Agentica](https://github.com/sonic182/agentica), a language for AI agents.
 Tracked in [sonic182/agentica#347](https://github.com/sonic182/agentica/issues/347).
 
-> **Status:** early stage. The grammar is usable; editor packaging is not done yet.
+> **Status:** early stage. The grammar and a VS Code extension are usable; nothing is published yet.
 
 The grammar is [`syntaxes/agentica.tmLanguage.json`](syntaxes/agentica.tmLanguage.json), with scope name
 `source.agentica` for `.agc` files. It is tested with vscode-textmate, the engine of VS Code and Shiki. Sublime Text
@@ -11,11 +11,26 @@ and `bat` read `.sublime-syntax` files, so they need a converted copy.
 
 Neovim highlights with tree-sitter instead; see [docs/neovim.md](docs/neovim.md) for its setup.
 
+## VS Code
+
+The repository is also a VS Code extension: the grammar plus a language configuration (`#` comments, bracket pairs,
+indentation after `def`, `if`, `do` and the other block openers, and words that keep a `?` or `!` suffix). It is not on
+a marketplace yet; build and install it from a checkout:
+
+```sh
+npm ci
+npm run package                 # writes agentica-0.1.0.vsix
+code --install-extension agentica-0.1.0.vsix
+```
+
+The indentation rules are line patterns. Enter after a case arm's `->` indents the body, but nothing outdents the next
+arm; lines inside a heredoc body count like code.
+
 ## Development
 
 ```sh
 npm ci
-npm test                        # assertion tests in test/*.agc
+npm test                        # grammar assertions in test/*.agc and the extension test
 npm run test:repo -- [path]     # tokenize every source of an Agentica checkout
 ```
 
