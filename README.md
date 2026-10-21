@@ -30,18 +30,21 @@ arm; lines inside a heredoc body count like code.
 
 ### Publishing
 
-The manual `Publish` workflow (Actions > Publish > Run workflow) runs the tests, builds the `.vsix` and publishes it to
-the VS Code Marketplace, Open VSX or both. It needs these repository secrets and fails before building if the chosen
-target's secret is missing:
+The manual `Publish` workflow (Actions > Publish > Run workflow, from `main` only) runs the tests, builds the `.vsix`
+and publishes it to the VS Code Marketplace, Open VSX or both. It needs these repository secrets and fails before
+building if the chosen target's secret is missing:
 
 - `VSCE_PAT`: an Azure DevOps personal access token with the Marketplace > Manage scope, for the `agentica-lang`
   publisher.
 - `OVSX_PAT`: an Open VSX access token. Create the `agentica-lang` namespace once with `npx ovsx create-namespace
   agentica-lang --pat <token>`.
 
-Bump `version` in `package.json` before each run; both registries reject a version that is already published.
+Bump `version` in `package.json` before publishing a new release. A target that already has that version is skipped, so
+after a partial failure the workflow can be run again with `both`.
 
 ## Development
+
+The dev dependencies need Node 22 or later; CI uses Node 24.
 
 ```sh
 npm ci
