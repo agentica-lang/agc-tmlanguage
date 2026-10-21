@@ -28,6 +28,19 @@ CI also uploads the `.vsix` of each run as the `agentica-vsix` artifact.
 The indentation rules are line patterns. Enter after a case arm's `->` indents the body, but nothing outdents the next
 arm; lines inside a heredoc body count like code.
 
+### Publishing
+
+The manual `Publish` workflow (Actions > Publish > Run workflow) runs the tests, builds the `.vsix` and publishes it to
+the VS Code Marketplace, Open VSX or both. It needs these repository secrets and fails before building if the chosen
+target's secret is missing:
+
+- `VSCE_PAT`: an Azure DevOps personal access token with the Marketplace > Manage scope, for the `agentica-lang`
+  publisher.
+- `OVSX_PAT`: an Open VSX access token. Create the `agentica-lang` namespace once with `npx ovsx create-namespace
+  agentica-lang --pat <token>`.
+
+Bump `version` in `package.json` before each run; both registries reject a version that is already published.
+
 ## Development
 
 ```sh
