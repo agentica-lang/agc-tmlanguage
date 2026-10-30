@@ -50,6 +50,9 @@ struct Point
   x: Int
 # ^ variable.other.property.agentica
 #    ^^^ support.type.builtin.agentica
+  data: Bytes
+# ^^^^ variable.other.property.agentica
+#       ^^^^^ support.type.builtin.agentica
   label: Models.Label
 # ^^^^^ variable.other.property.agentica
 #        ^^^^^^ entity.name.type.agentica
