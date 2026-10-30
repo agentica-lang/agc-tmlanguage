@@ -53,6 +53,9 @@ struct Point
   data: Bytes
 # ^^^^ variable.other.property.agentica
 #       ^^^^^ support.type.builtin.agentica
+  note: Optional[String]
+# ^^^^ variable.other.property.agentica
+#       ^^^^^^^^ support.type.builtin.agentica
   label: Models.Label
 # ^^^^^ variable.other.property.agentica
 #        ^^^^^^ entity.name.type.agentica
@@ -113,6 +116,11 @@ def area(shape: Shape, p: Point, width: Int = 80) -> Float
 #              ^ variable.parameter.named.agentica
 #                    ^^^^^ variable.parameter.named.agentica
 #                           ^^^ constant.language.nil.agentica
+  found = some(none)
+#         ^^^^ entity.name.function.agentica
+#              ^^^^ constant.language.none.agentica
+  missing = none
+#           ^^^^ constant.language.none.agentica
   f = &area
 #     ^ keyword.operator.reference.agentica
 #      ^^^^ entity.name.function.agentica
@@ -133,6 +141,10 @@ def area(shape: Shape, p: Point, width: Int = 80) -> Float
 #                               ^^^^^^ keyword.control.return.agentica
     ok(v) -> return 1.5
 #   ^^ entity.name.function.agentica
+    some(v) -> return 1.5
+#   ^^^^ entity.name.function.agentica
+    none -> return nil
+#   ^^^^ constant.language.none.agentica
     _ -> return nil
 #   ^ variable.language.anonymous.agentica
   end
