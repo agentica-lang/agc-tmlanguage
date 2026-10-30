@@ -32,10 +32,10 @@ def main() -> Void # trailing
   o = Domain.Option.Some(1)
 #            ^^^^^^ entity.name.type.agentica
 #                   ^^^^ variable.other.enummember.agentica
-  receiver: Ast.Optional[Ast.Expr] = Ast.Optional.Absent
-#               ^^^^^^^^ entity.name.type.agentica - variable.other.enummember.agentica
-#                            ^^^^ entity.name.type.agentica - variable.other.enummember.agentica
-#                                                 ^^^^^^ variable.other.enummember.agentica
+  receiver: Ast.Maybe[Ast.Expr] = Ast.Maybe.Absent
+#               ^^^^^ entity.name.type.agentica - variable.other.enummember.agentica
+#                         ^^^^ entity.name.type.agentica - variable.other.enummember.agentica
+#                                            ^^^^^^ variable.other.enummember.agentica
   IO.puts(IO.gets!)
 #            ^^^^^ entity.name.function.agentica
   e = &Util.f!=x
