@@ -38,3 +38,11 @@ big = 1_000.000_5 + 1_000.times + 1_000..2_000
 #                                 ^^^^^ constant.numeric.integer.agentica
 #                                      ^^ keyword.operator.range.agentica
 #                                        ^^^^^ constant.numeric.integer.agentica
+
+mask = 0xFF + 0Xdead_BEEF + 0b1010_1010 + 0o755 + 0xFF.to_s
+#      ^^^^ constant.numeric.integer.agentica
+#             ^^^^^^^^^^^ constant.numeric.integer.agentica
+#                           ^^^^^^^^^^^ constant.numeric.integer.agentica
+#                                         ^^^^^ constant.numeric.integer.agentica
+#                                                 ^^^^ constant.numeric.integer.agentica
+#                                                     ^ punctuation.accessor.agentica
