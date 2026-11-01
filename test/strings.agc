@@ -46,3 +46,14 @@ mask = 0xFF + 0Xdead_BEEF + 0b1010_1010 + 0o755 + 0xFF.to_s
 #                                         ^^^^^ constant.numeric.integer.agentica
 #                                                 ^^^^ constant.numeric.integer.agentica
 #                                                     ^ punctuation.accessor.agentica
+
+rate = 1.5e-3 + 1e5 + 2.0E+10 + 1_0e1_0 + 1e5.to_s
+#      ^^^^^^ constant.numeric.float.agentica
+#               ^^^ constant.numeric.float.agentica
+#                     ^^^^^^^ constant.numeric.float.agentica
+#                               ^^^^^^^ constant.numeric.float.agentica
+#                                         ^^^ constant.numeric.float.agentica
+#                                            ^ punctuation.accessor.agentica
+
+field: JsonField[Int] = none
+#      ^^^^^^^^^ support.type.builtin.agentica
