@@ -98,7 +98,7 @@
     },
     "regex": {
       "comment": "A / starts a regex where a value can start: at a line start, after an operator, an opening bracket, a comma or a keyword. After a value it is division.",
-      "begin": "(?:^\\s*|(?<=[=(\\[{,|!&<>:])|(?<=[=(\\[{,|!&<>:+\\-*%] )|(?<=\\breturn )|(?<=\\band )|(?<=\\bor )|(?<=\\bnot )|(?<=\\bif )|(?<=\\belsif )|(?<=\\bwhile )|(?<=\\bin )|(?<=\\bdo )|(?<=\\belse )|(?<=\\btry )|(?<=\\bcase ))(/)(?![/*])",
+      "begin": "(?:^\\s*|(?<=[=(\\[{,|&<>:])|(?<=[^\\w]!)|(?<=^!)|(?<=[=(\\[{,|&<>:+\\-*%] )|(?<=[^\\w]! )|(?<=^! )|(?<=\\breturn )|(?<=\\band )|(?<=\\bor )|(?<=\\bnot )|(?<=\\bif )|(?<=\\belsif )|(?<=\\bwhile )|(?<=\\bin )|(?<=\\bdo )|(?<=\\belse )|(?<=\\btry )|(?<=\\bcase ))(/)(?![/*])",
       "beginCaptures": {
         "1": { "name": "string.regexp.agentica punctuation.definition.string.begin.agentica" }
       },

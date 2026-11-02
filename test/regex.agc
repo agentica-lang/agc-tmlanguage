@@ -39,5 +39,12 @@ end
   /line start/
 # ^^^^^^^^^^^^ string.regexp.agentica
 
+h = y.unwrap! / 2 + z.unwrap!/3
+#             ^ keyword.operator.arithmetic.agentica - string.regexp.agentica
+#                            ^ keyword.operator.arithmetic.agentica - string.regexp.agentica
+
+ok = !/d/.source
+#     ^^^ string.regexp.agentica
+
 // not a regex
 # <- keyword.operator.arithmetic.agentica
