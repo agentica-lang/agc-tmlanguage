@@ -72,6 +72,10 @@ A TextMate grammar matches lines with regular expressions, so it approximates th
 - Outside `def` headers, type aliases and typed bindings (`x: Models.User = ...`), `Models.User` scopes `User` as an enum
   variant, as `Color.Red` does: in an expression the two look the same.
 - An all-caps name such as `TIMEOUT_MS` is scoped as a constant, so an all-caps type name (`URL`) is too.
+- A `/` starts a regex literal (`string.regexp`) at a line start, right after `= ( [ { , | ! & < > :`, after
+  `+ - * %` and a space, or after a keyword such as `return`, `and` or `if` and a space; anywhere else it is division.
+  The language decides by the token before the `/`; the grammar sees at most one space before it, so `x =  /a/`
+  (two spaces) is scoped as division. A regex that does not close on its line ends there.
 
 ## License
 
