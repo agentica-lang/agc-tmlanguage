@@ -105,6 +105,9 @@ def area(shape: Shape, p: Point, width: Int = 80) -> Float
   IO.puts(total)
 # ^^ support.type.builtin.agentica
 #    ^^^^ entity.name.function.agentica
+  root = Math.sqrt(2.0)
+#        ^^^^ support.type.builtin.agentica
+#             ^^^^ entity.name.function.agentica
   rows = Models.load!(LIMIT)
 #        ^^^^^^ entity.name.namespace.agentica
 #               ^^^^^ entity.name.function.agentica
