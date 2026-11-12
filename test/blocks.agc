@@ -60,3 +60,29 @@ export module Report
 #            ^^^^^^ support.type.builtin.agentica
   level = Logger.Level.Info
 #                      ^^^^ variable.other.enummember.agentica
+  while a == ready do
+#            ^^^^^ variable.other.readwrite.agentica
+  end
+  while a != ready do
+#            ^^^^^ variable.other.readwrite.agentica
+  end
+  while a >= ready do
+#            ^^^^^ variable.other.readwrite.agentica
+  end
+  while a <= ready do
+#            ^^^^^ variable.other.readwrite.agentica
+  end
+  case x
+    1 -> (a + b) * 2
+#   ^ constant.numeric.integer.agentica
+#        ^ punctuation.section.parens.agentica
+  end
+  g = ->(f: Fn(Int) -> Int, h: Int) { f(h) }
+#       ^ punctuation.definition.parameters.begin.agentica
+#        ^ variable.parameter.agentica
+#                           ^ variable.parameter.agentica
+#                                 ^ punctuation.definition.parameters.end.agentica
+  xs.each { |x| puts(x) }
+#                       ^ punctuation.section.braces.end.agentica
+  s = HTTP.Stream(x)
+#          ^^^^^^ support.type.builtin.agentica

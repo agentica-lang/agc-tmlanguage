@@ -367,8 +367,8 @@
       ]
     },
     "lambda": {
-      "comment": "A lambda, `->(x: Int) { x * 2 }`; `-> { 42 }` has no parameters and is the arrow operator.",
-      "begin": "(->)\\s*(\\()",
+      "comment": "A lambda, `->(x: Int) { x * 2 }`; `-> { 42 }` has no parameters and is the arrow operator. The parameter list must be followed by `{` on the line, so `1 -> (a + b) * 2` in a case arm is not one. One level of nested parentheses (`Fn(Int) -> Int`) is allowed.",
+      "begin": "(->)\\s*(\\()(?=[^()]*(?:\\([^()]*\\)[^()]*)*\\)\\s*\\{)",
       "beginCaptures": {
         "1": { "name": "keyword.operator.arrow.agentica" },
         "2": { "name": "punctuation.definition.parameters.begin.agentica" }
@@ -380,7 +380,16 @@
       "name": "meta.function.lambda.agentica",
       "patterns": [
         {
-          "match": "\\b[a-z_][A-Za-z0-9_]*\\b",
+          "begin": "\\(",
+          "end": "\\)",
+          "patterns": [{ "include": "#type-expression" }]
+        },
+        {
+          "match": "\\b[a-z_][A-Za-z0-9_]*\\b(?=\\s*:)",
+          "name": "variable.parameter.agentica"
+        },
+        {
+          "match": "\\b[a-z_][A-Za-z0-9_]*\\b(?=\\s*[,)])",
           "name": "variable.parameter.agentica"
         },
         { "include": "#type-expression" }
@@ -515,14 +524,14 @@
       ]
     },
     "nested-builtin": {
-          "comment": "A builtin nested name, `Family.Member` (`OpenSSL.Digest`, `HTTP.Request`, `Logger.Event`, `TLS.Context`, `File.Handle`), is a type. A third segment (`Logger.Level.Info`) is left to the next rule.",
-          "match": "\\b(OpenSSL|HTTP|HttpWire|Logger|LogRegistry|TLS|TCP|JSON|File|Process|C|Native)(\\.)([A-Z][A-Za-z0-9_]*)\\b(?!\\.[A-Z])",
-          "captures": {
-            "1": { "name": "support.type.builtin.agentica" },
-            "2": { "name": "punctuation.accessor.agentica" },
-            "3": { "name": "support.type.builtin.agentica" }
-          }
-        },
+      "comment": "A builtin nested name, `Family.Member` (`OpenSSL.Digest`, `HTTP.Request`, `Logger.Event`, `TLS.Context`, `File.Handle`), is a type. A third segment (`Logger.Level.Info`) is left to the next rule.",
+      "match": "\\b(OpenSSL|HTTP|HttpWire|Logger|LogRegistry|TLS|TCP|JSON|File|Process|Codec|Test|System|C|Native)(\\.)([A-Z][A-Za-z0-9_]*)\\b(?!\\.[A-Z])",
+      "captures": {
+        "1": { "name": "support.type.builtin.agentica" },
+        "2": { "name": "punctuation.accessor.agentica" },
+        "3": { "name": "support.type.builtin.agentica" }
+      }
+    },
     "paths": {
       "patterns": [
         { "include": "#nested-builtin" },
@@ -590,7 +599,7 @@
         },
         {
           "comment": "A call without `()` before a block: `run do ... end`, `twice { |x| x + 1 }`. Only where a statement or a value starts, so `while ready do` keeps `ready` a variable.",
-          "match": "(?:^\\s*|(?<==\\s|\\(|,\\s|\\|>\\s))(?!(?:return|and|or|not|in|if|elsif|while|for|case|try|else|do|end|break|next)\\b)([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?)(?=\\s+do\\b|\\s+\\{(?:\\s*\\||\\s*$|\\s+[^}]*\\}))",
+          "match": "(?:^\\s*|(?<=[^=!<>]=\\s|\\(|,\\s|\\|>\\s))(?!(?:return|and|or|not|in|if|elsif|while|for|case|try|else|do|end|break|next)\\b)([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?)(?=\\s+do\\b|\\s+\\{(?:\\s*\\||\\s*$|\\s+[^}]*\\}))",
           "captures": {
             "1": { "name": "entity.name.function.agentica" }
           }
@@ -680,7 +689,8 @@
         { "match": "\\|", "name": "punctuation.separator.pipe.agentica" },
         { "match": "[()]", "name": "punctuation.section.parens.agentica" },
         { "match": "[\\[\\]]", "name": "punctuation.section.brackets.agentica" },
-        { "match": "[{}]", "name": "punctuation.section.braces.agentica" }
+        { "match": "\\{", "name": "punctuation.section.braces.agentica" },
+        { "match": "\\}", "name": "punctuation.section.braces.end.agentica" }
       ]
     },
     "identifiers": {
