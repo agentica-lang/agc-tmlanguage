@@ -9,7 +9,9 @@
     { "include": "#string" },
     { "include": "#regex" },
     { "include": "#declarations" },
+    { "include": "#lambda" },
     { "include": "#block" },
+    { "include": "#brace-block" },
     { "include": "#keywords" },
     { "include": "#constants" },
     { "include": "#numbers" },
@@ -203,8 +205,17 @@
               "beginCaptures": {
                 "0": { "name": "keyword.operator.arrow.agentica" }
               },
-              "end": "(?=#)|$",
+              "end": "(?==)|(?=#)|$",
               "patterns": [{ "include": "#type-expression" }]
+            },
+            {
+              "comment": "A one-line def: `def f(x: Int) -> Int = x * 2`. The expression is an ordinary one.",
+              "begin": "=(?!=)",
+              "beginCaptures": {
+                "0": { "name": "keyword.operator.assignment.agentica" }
+              },
+              "end": "(?=#)|$",
+              "patterns": [{ "include": "$self" }]
             },
             { "include": "#type-expression" }
           ]
@@ -355,16 +366,73 @@
         { "include": "#punctuation" }
       ]
     },
+    "lambda": {
+      "comment": "A lambda, `->(x: Int) { x * 2 }`; `-> { 42 }` has no parameters and is the arrow operator. The parameter list must be followed by `{` on the line, so `1 -> (a + b) * 2` in a case arm is not one. One level of nested parentheses (`Fn(Int) -> Int`) is allowed.",
+      "begin": "(->)\\s*(\\()(?=[^()]*(?:\\([^()]*\\)[^()]*)*\\)\\s*\\{)",
+      "beginCaptures": {
+        "1": { "name": "keyword.operator.arrow.agentica" },
+        "2": { "name": "punctuation.definition.parameters.begin.agentica" }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.parameters.end.agentica" }
+      },
+      "name": "meta.function.lambda.agentica",
+      "patterns": [
+        {
+          "begin": "\\(",
+          "end": "\\)",
+          "patterns": [{ "include": "#type-expression" }]
+        },
+        {
+          "match": "\\b[a-z_][A-Za-z0-9_]*\\b(?=\\s*:)",
+          "name": "variable.parameter.agentica"
+        },
+        {
+          "match": "\\b[a-z_][A-Za-z0-9_]*\\b(?=\\s*[,)])",
+          "name": "variable.parameter.agentica"
+        },
+        { "include": "#type-expression" }
+      ]
+    },
+    "brace-block": {
+      "comment": "The parameters of a block in braces: `xs.each { |x| puts(x) }`.",
+      "begin": "(\\{)\\s*(\\|)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.braces.begin.agentica" },
+        "2": { "name": "punctuation.definition.parameters.begin.agentica" }
+      },
+      "end": "\\|",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.parameters.end.agentica" }
+      },
+      "patterns": [
+        {
+          "match": "\\b[a-z_][A-Za-z0-9_]*\\b",
+          "name": "variable.parameter.agentica"
+        },
+        { "include": "#types" },
+        { "include": "#punctuation" }
+      ]
+    },
     "keywords": {
       "patterns": [
         {
-          "match": "^\\s*(break|next)\\s*(?=$|#)",
+          "match": "^\\s*(?:(export)\\s+)?(module)\\s+([A-Z][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.control.export.agentica" },
+            "2": { "name": "storage.type.module.agentica" },
+            "3": { "name": "entity.name.namespace.agentica" }
+          }
+        },
+        {
+          "match": "^\\s*(break|next)\\s*(?=$|#|\\bif\\b)",
           "captures": {
             "1": { "name": "keyword.control.loop.agentica" }
           }
         },
         {
-          "match": "(?<=->)\\s*(break|next)\\s*(?=$|#)",
+          "match": "(?<=->)\\s*(break|next)\\s*(?=$|#|\\bif\\b)",
           "captures": {
             "1": { "name": "keyword.control.loop.agentica" }
           }
@@ -455,8 +523,18 @@
         }
       ]
     },
+    "nested-builtin": {
+      "comment": "A builtin nested name, `Family.Member` (`OpenSSL.Digest`, `HTTP.Request`, `Logger.Event`, `TLS.Context`, `File.Handle`), is a type. A third segment (`Logger.Level.Info`) is left to the next rule.",
+      "match": "\\b(OpenSSL|HTTP|HttpWire|Logger|LogRegistry|TLS|TCP|JSON|File|Process|Codec|Test|System|C|Native)(\\.)([A-Z][A-Za-z0-9_]*)\\b(?!\\.[A-Z])",
+      "captures": {
+        "1": { "name": "support.type.builtin.agentica" },
+        "2": { "name": "punctuation.accessor.agentica" },
+        "3": { "name": "support.type.builtin.agentica" }
+      }
+    },
     "paths": {
       "patterns": [
+        { "include": "#nested-builtin" },
         {
           "match": "\\b([A-Z][A-Za-z0-9_]*)(\\.)([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?)",
           "captures": {
@@ -506,7 +584,7 @@
           }
         },
         {
-          "match": "(\\.)\\s*([a-z_][A-Za-z0-9_]*)(?=\\s*\\(|\\s+do\\b)",
+          "match": "(\\.)\\s*([a-z_][A-Za-z0-9_]*)(?=\\s*\\(|\\s+do\\b|\\s+\\{)",
           "captures": {
             "1": { "name": "punctuation.accessor.agentica" },
             "2": { "name": "entity.name.function.member.agentica" }
@@ -517,6 +595,13 @@
           "captures": {
             "1": { "name": "punctuation.accessor.agentica" },
             "2": { "name": "variable.other.property.agentica" }
+          }
+        },
+        {
+          "comment": "A call without `()` before a block: `run do ... end`, `twice { |x| x + 1 }`. Only where a statement or a value starts, so `while ready do` keeps `ready` a variable.",
+          "match": "(?:^\\s*|(?<=[^=!<>]=\\s|\\(|,\\s|\\|>\\s))(?!(?:return|and|or|not|in|if|elsif|while|for|case|try|else|do|end|break|next)\\b)([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?)(?=\\s+do\\b|\\s+\\{(?:\\s*\\||\\s*$|\\s+[^}]*\\}))",
+          "captures": {
+            "1": { "name": "entity.name.function.agentica" }
           }
         },
         {
@@ -546,11 +631,12 @@
       ]
     },
     "builtin-types": {
-      "match": "\\b(ATS|Await|Base64|Bool|Bytes|CMAC|Channel|Cipher|Crypto|Digest|Dir|File|FileHandle|FileInfo|Float|Fn|HMAC|Header|HttpClient|HttpClientOptions|HttpRequest|HttpResponse|HttpServer|HttpServerOptions|HttpWire|IO|Int|JSON|Json|JsonField|KDF|Lazy|List|Listener|LogEvent|LogLevel|LogRegistry|Map|Math|Nil|Optional|Path|Process|ProcessOutput|Profile|Random|Range|RegexEngine|Result|SecureRandom|Set|Socket|Std|String|StructMember|System|TCP|TLS|Task|Test|TestCase|Time|TlsClientOptions|TlsContext|TlsServerOptions|Void|Zlib)\\b",
+      "match": "\\b(ATS|Await|Base64|Bool|Bytes|C|Channel|Codec|Dir|File|FileHandle|FileInfo|Float|Fn|IO|Int|JSON|Json|JsonField|Lazy|List|Listener|Map|Math|Native|Nil|OpenSSL|Optional|Path|Process|ProcessOutput|Profile|Random|Range|Result|Set|Socket|String|StructMember|System|TCP|TLS|Task|TaskDown|TaskExit|TaskRef|Test|TestCase|Time|TlsClientOptions|TlsContext|TlsServerOptions|Void|Zlib)\\b",
       "name": "support.type.builtin.agentica"
     },
     "types": {
       "patterns": [
+        { "include": "#nested-builtin" },
         { "include": "#builtin-types" },
         {
           "match": "\\b[A-Z][A-Z0-9_]+\\b",
@@ -603,7 +689,8 @@
         { "match": "\\|", "name": "punctuation.separator.pipe.agentica" },
         { "match": "[()]", "name": "punctuation.section.parens.agentica" },
         { "match": "[\\[\\]]", "name": "punctuation.section.brackets.agentica" },
-        { "match": "[{}]", "name": "punctuation.section.braces.agentica" }
+        { "match": "\\{", "name": "punctuation.section.braces.agentica" },
+        { "match": "\\}", "name": "punctuation.section.braces.end.agentica" }
       ]
     },
     "identifiers": {

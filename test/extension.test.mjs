@@ -53,6 +53,11 @@ test("indentation follows blocks", () => {
     "  if x # until the end",
     "  if xs.any? do |x| ok?(x) end",
     ") -> Result[HttpResponse]",
+    "module Stock",
+    "def first(xs: List[Int], d: Int = 0) -> Int",
+    "  xs.each { |x|",
+    "  f = ->(x) {",
+    "  total = xs.map {",
   ];
   const stays = [
     "  total = p.x + 1",
@@ -66,10 +71,15 @@ test("indentation follows blocks", () => {
     "    error(message) ->",
     "  )",
     "    ) -> return v",
+    "def double(n: Int) -> Int = n * 2",
+    "export def label(n: Int) -> String = \"n: #{n}\"",
+    ") -> Int = 1",
+    "  xs.each { |x| puts(x) }",
+    "  f = ->(x) { x * 2 }",
   ];
   for (const line of opens) assert.ok(increase.test(line), `should indent after: ${line}`);
   for (const line of stays) assert.ok(!increase.test(line), `should not indent after: ${line}`);
-  for (const line of ["end", "  end", "  elsif x", "  else"]) assert.ok(decrease.test(line), `should outdent: ${line}`);
+  for (const line of ["end", "  end", "  elsif x", "  else", "}", "  }"]) assert.ok(decrease.test(line), `should outdent: ${line}`);
   for (const line of ["  endpoint = 2", "  ending()", "  elsewhere = 1"]) {
     assert.ok(!decrease.test(line), `should not outdent: ${line}`);
   }
