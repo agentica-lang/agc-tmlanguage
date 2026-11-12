@@ -1,9 +1,9 @@
-# SYNTAX TEST "source.agentica" "lambdas, blocks, one-line defs, guards, modules and nested builtin names"
+# SYNTAX TEST "source.agentica" "lambdas, blocks, one-line defs, guards, modules and nested names"
 
 def double(n: Int) -> Int = n * 2
 # <--- storage.type.function.agentica
 #   ^^^^^^ entity.name.function.agentica
-#                     ^^^ support.type.builtin.agentica
+#                     ^^^ entity.name.type.agentica
 #                         ^ keyword.operator.assignment.agentica
 
 def list_text(items: List[String]) -> String = "[#{items.join(",")}]"
@@ -14,7 +14,7 @@ def main() -> Void
 #         ^^ keyword.operator.arrow.agentica
 #           ^ punctuation.definition.parameters.begin.agentica
 #            ^ variable.parameter.agentica
-#               ^^^ support.type.builtin.agentica
+#               ^^^ entity.name.type.agentica
   total = xs |> map(->(y) { y * 2 }) |> sum()
 #                      ^ variable.parameter.agentica
   xs.each { |x| puts(x) }
@@ -53,13 +53,13 @@ export module Report
 #      ^^^^^^ storage.type.module.agentica
 
   req = HTTP.Request(url: "x")
-#       ^^^^ support.type.builtin.agentica
-#            ^^^^^^^ support.type.builtin.agentica
+#       ^^^^ entity.name.type.agentica
+#            ^^^^^^^ entity.name.type.agentica
   d: OpenSSL.Digest = OpenSSL.Digest.sha256("x")
-#    ^^^^^^^ support.type.builtin.agentica
-#            ^^^^^^ support.type.builtin.agentica
+#    ^^^^^^^ entity.name.type.agentica
+#            ^^^^^^ entity.name.type.agentica
   level = Logger.Level.Info
-#                      ^^^^ variable.other.enummember.agentica
+#                      ^^^^ entity.name.type.agentica
   while a == ready do
 #            ^^^^^ variable.other.readwrite.agentica
   end
@@ -85,4 +85,11 @@ export module Report
   xs.each { |x| puts(x) }
 #                       ^ punctuation.section.braces.end.agentica
   s = HTTP.Stream(x)
-#          ^^^^^^ support.type.builtin.agentica
+#          ^^^^^^ entity.name.type.agentica
+
+  e = Event.Level
+#     ^^^^^ entity.name.type.agentica
+#           ^^^^^ entity.name.type.agentica
+  l = Logger.info("x")
+#     ^^^^^^ entity.name.namespace.agentica
+#            ^^^^ entity.name.function.agentica

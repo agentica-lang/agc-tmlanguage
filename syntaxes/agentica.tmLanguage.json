@@ -523,24 +523,13 @@
         }
       ]
     },
-    "nested-builtin": {
-      "comment": "A builtin nested name, `Family.Member` (`OpenSSL.Digest`, `HTTP.Request`, `Logger.Event`, `TLS.Context`, `File.Handle`), is a type. A third segment (`Logger.Level.Info`) is left to the next rule.",
-      "match": "\\b(OpenSSL|HTTP|HttpWire|Logger|LogRegistry|TLS|TCP|JSON|File|Process|Codec|Test|System|C|Native)(\\.)([A-Z][A-Za-z0-9_]*)\\b(?!\\.[A-Z])",
-      "captures": {
-        "1": { "name": "support.type.builtin.agentica" },
-        "2": { "name": "punctuation.accessor.agentica" },
-        "3": { "name": "support.type.builtin.agentica" }
-      }
-    },
     "paths": {
       "patterns": [
-        { "include": "#nested-builtin" },
         {
           "match": "\\b([A-Z][A-Za-z0-9_]*)(\\.)([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?)",
           "captures": {
             "1": {
-              "name": "entity.name.namespace.agentica",
-              "patterns": [{ "include": "#builtin-types" }]
+              "name": "entity.name.namespace.agentica"
             },
             "2": { "name": "punctuation.accessor.agentica" },
             "3": { "name": "entity.name.function.agentica" }
@@ -550,8 +539,7 @@
           "match": "\\b([A-Z][A-Za-z0-9_]*)((?:\\.[A-Z][A-Za-z0-9_]*)*)(\\.)([A-Z][A-Za-z0-9_]*)\\b",
           "captures": {
             "1": {
-              "name": "entity.name.type.agentica",
-              "patterns": [{ "include": "#builtin-types" }]
+              "name": "entity.name.type.agentica"
             },
             "2": {
               "patterns": [
@@ -560,7 +548,7 @@
               ]
             },
             "3": { "name": "punctuation.accessor.agentica" },
-            "4": { "name": "variable.other.enummember.agentica" }
+            "4": { "name": "entity.name.type.agentica" }
           }
         }
       ]
@@ -630,14 +618,8 @@
         { "include": "#punctuation" }
       ]
     },
-    "builtin-types": {
-      "match": "\\b(ATS|Await|Base64|Bool|Bytes|C|Channel|Codec|Dir|File|FileHandle|FileInfo|Float|Fn|IO|Int|JSON|Json|JsonField|Lazy|List|Listener|Map|Math|Native|Nil|OpenSSL|Optional|Path|Process|ProcessOutput|Profile|Random|Range|Result|Set|Socket|String|StructMember|System|TCP|TLS|Task|TaskDown|TaskExit|TaskRef|Test|TestCase|Time|TlsClientOptions|TlsContext|TlsServerOptions|Void|Zlib)\\b",
-      "name": "support.type.builtin.agentica"
-    },
     "types": {
       "patterns": [
-        { "include": "#nested-builtin" },
-        { "include": "#builtin-types" },
         {
           "match": "\\b[A-Z][A-Z0-9_]+\\b",
           "name": "variable.other.constant.agentica"

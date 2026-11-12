@@ -34,12 +34,12 @@ LIMIT = 10
 export Max: Int = 3
 # <------ keyword.control.export.agentica
 #      ^^^ variable.other.constant.agentica
-#           ^^^ support.type.builtin.agentica
+#           ^^^ entity.name.type.agentica
 
 type UserId = Int
 # <---- storage.type.type.agentica
 #    ^^^^^^ entity.name.type.alias.agentica
-#             ^^^ support.type.builtin.agentica
+#             ^^^ entity.name.type.agentica
 
 ## A point on the plane.
 # <-- comment.line.documentation.agentica
@@ -49,13 +49,13 @@ struct Point
 #      ^^^^^ entity.name.type.struct.agentica
   x: Int
 # ^ variable.other.property.agentica
-#    ^^^ support.type.builtin.agentica
+#    ^^^ entity.name.type.agentica
   data: Bytes
 # ^^^^ variable.other.property.agentica
-#       ^^^^^ support.type.builtin.agentica
+#       ^^^^^ entity.name.type.agentica
   note: Optional[String]
 # ^^^^ variable.other.property.agentica
-#       ^^^^^^^^ support.type.builtin.agentica
+#       ^^^^^^^^ entity.name.type.agentica
   label: Models.Label
 # ^^^^^ variable.other.property.agentica
 #        ^^^^^^ entity.name.type.agentica
@@ -68,7 +68,7 @@ enum Shape[T]
 #          ^ entity.name.type.agentica
   Circle(Float)
 # ^^^^^^ variable.other.enummember.agentica
-#        ^^^^^ support.type.builtin.agentica
+#        ^^^^^ entity.name.type.agentica
   Empty
 # ^^^^^ variable.other.enummember.agentica
 end
@@ -82,7 +82,7 @@ def area(shape: Shape, p: Point, width: Int = 80) -> Float
 #                                ^^^^^ variable.parameter.agentica
 #                                             ^^ constant.numeric.integer.agentica
 #                                                 ^^ keyword.operator.arrow.agentica
-#                                                    ^^^^^ support.type.builtin.agentica
+#                                                    ^^^^^ entity.name.type.agentica
   total = p.x + 1
 # ^^^^^ variable.other.readwrite.agentica
 #       ^ keyword.operator.assignment.agentica
@@ -91,7 +91,7 @@ def area(shape: Shape, p: Point, width: Int = 80) -> Float
 #             ^ keyword.operator.arithmetic.agentica
   count: Int = 0
 # ^^^^^ variable.other.readwrite.agentica
-#        ^^^ support.type.builtin.agentica
+#        ^^^ entity.name.type.agentica
   xs = [1].map do |item| item * 2 end
 #          ^^^ entity.name.function.member.agentica
 #              ^^ keyword.control.agentica
@@ -99,21 +99,21 @@ def area(shape: Shape, p: Point, width: Int = 80) -> Float
 #                                 ^^^ keyword.control.agentica
   ys = xs.filter do |n: Int| n > 0 end
 #                    ^ variable.parameter.agentica
-#                       ^^^ support.type.builtin.agentica
+#                       ^^^ entity.name.type.agentica
   puts(total)
 # ^^^^ entity.name.function.agentica
   IO.puts(total)
-# ^^ support.type.builtin.agentica
+# ^^ entity.name.namespace.agentica
 #    ^^^^ entity.name.function.agentica
   root = Math.sqrt(2.0)
-#        ^^^^ support.type.builtin.agentica
+#        ^^^^ entity.name.namespace.agentica
 #             ^^^^ entity.name.function.agentica
   rows = Models.load!(LIMIT)
 #        ^^^^^^ entity.name.namespace.agentica
 #               ^^^^^ entity.name.function.agentica
   c = Shape.Circle(1.0)
 #     ^^^^^ entity.name.type.agentica
-#           ^^^^^^ variable.other.enummember.agentica
+#           ^^^^^^ entity.name.type.agentica
 #                  ^^^ constant.numeric.float.agentica
   item = Point(x: 1, label: nil)
 #              ^ variable.parameter.named.agentica
