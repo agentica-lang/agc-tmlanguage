@@ -48,7 +48,7 @@ v = Models.Shape.Circle
 #         ^ punctuation.accessor.agentica
 #          ^^^^^ entity.name.type.agentica
 #               ^ punctuation.accessor.agentica
-#                ^^^^^^ variable.other.enummember.agentica
+#                ^^^^^^ entity.name.type.agentica
 
 def scan(rows: List[Int]) -> Void
   for row in rows do

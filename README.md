@@ -68,8 +68,7 @@ A TextMate grammar matches lines with regular expressions, so it approximates th
 
 - A call without `()` before a block (`run do ... end`, `twice { |x| x + 1 }`) is scoped as a function only at a statement
   start or after `=`, `(`, `,` or `|>`; elsewhere it stays a variable.
-- A `Family.Member` builtin name (`OpenSSL.Digest`, `HTTP.Request`, `TLS.Context`) is scoped as a type for the families
-  listed in the grammar; a user enum of the same family name reads the same.
+- `Family.Member` (`HTTP.Request`, `OpenSSL.Digest`) is scoped by shape: both names are types, as in any type path, and a call on a capitalized name (`Logger.info(x)`) is a module call. The grammar has no list of builtin names, so a user's names color the same way.
 - Only one or two heredocs may open on the same line. When two do, a line of the second body that starts at column 0
   with `<<~NAME` opens a new heredoc.
 - A map key written as a bare name (`{a: 1}`) is scoped like a named argument.

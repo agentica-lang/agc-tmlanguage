@@ -56,4 +56,4 @@ rate = 1.5e-3 + 1e5 + 2.0E+10 + 1_0e1_0 + 1e5.to_s
 #                                            ^ punctuation.accessor.agentica
 
 field: JsonField[Int] = none
-#      ^^^^^^^^^ support.type.builtin.agentica
+#      ^^^^^^^^^ entity.name.type.agentica
