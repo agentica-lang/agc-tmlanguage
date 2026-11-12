@@ -1,7 +1,7 @@
 {
   "name": "agentica",
   "displayName": "Agentica",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Syntax highlighting for Agentica, a language for AI agents",
   "license": "Apache-2.0",
   "publisher": "agentica-lang",

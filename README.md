@@ -19,8 +19,8 @@ header, and words that keep a `?` or `!` suffix). It is not on a marketplace yet
 
 ```sh
 npm ci
-npm run package                 # writes agentica-0.1.0.vsix
-code --install-extension agentica-0.1.0.vsix
+npm run package                 # writes agentica-0.2.0.vsix
+code --install-extension agentica-0.2.0.vsix
 ```
 
 CI also uploads the `.vsix` of each run as the `agentica-vsix` artifact.
@@ -66,6 +66,10 @@ top-level `def`, `struct`, `enum` or `type` line. The path defaults to `../agent
 
 A TextMate grammar matches lines with regular expressions, so it approximates the language:
 
+- A call without `()` before a block (`run do ... end`, `twice { |x| x + 1 }`) is scoped as a function only at a statement
+  start or after `=`, `(`, `,` or `|>`; elsewhere it stays a variable.
+- A `Family.Member` builtin name (`OpenSSL.Digest`, `HTTP.Request`, `TLS.Context`) is scoped as a type for the families
+  listed in the grammar; a user enum of the same family name reads the same.
 - Only one or two heredocs may open on the same line. When two do, a line of the second body that starts at column 0
   with `<<~NAME` opens a new heredoc.
 - A map key written as a bare name (`{a: 1}`) is scoped like a named argument.
