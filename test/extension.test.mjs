@@ -72,6 +72,13 @@ test("indentation follows blocks", () => {
     "  )",
     "    ) -> return v",
     "def double(n: Int) -> Int = n * 2",
+    "def triple(n: Int) -> Int = n * 3",
+    "def parse(text: String) -> Result[Int] = try text.to_i",
+    "def squares(xs: List[Int]) -> List[Int] = xs.map { |x| x * x }",
+    "  return limit if x > limit",
+    "  return if x < 0",
+    "  break if n > 3",
+    "  next if skip?(x)",
     "def label(n: Int) -> String = \"n: #{n}\"",
     "private",
     "  private # helpers below",
@@ -83,7 +90,7 @@ test("indentation follows blocks", () => {
   for (const line of opens) assert.ok(increase.test(line), `should indent after: ${line}`);
   for (const line of stays) assert.ok(!increase.test(line), `should not indent after: ${line}`);
   for (const line of ["end", "  end", "  elsif x", "  else", "}", "  }"]) assert.ok(decrease.test(line), `should outdent: ${line}`);
-  for (const line of ["  endpoint = 2", "  ending()", "  elsewhere = 1"]) {
+  for (const line of ["  endpoint = 2", "  ending()", "  elsewhere = 1", "  return x if c", "  next if c"]) {
     assert.ok(!decrease.test(line), `should not outdent: ${line}`);
   }
 });

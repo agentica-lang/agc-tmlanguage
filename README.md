@@ -77,6 +77,9 @@ A TextMate grammar matches lines with regular expressions, so it approximates th
   tab) inside a `module` block, which it follows to the `end` at the indent of its `module` line, and at any indent in a
   struct body. So a lone `private` that ends a function body (a variable) is a name, but a module body indented by
   another width than `agentica fmt` writes reads its `private` line as a name too.
+- A `module` rule ends only at an `end` with the indent of its `module` line. Agentica accepts a module whose `end` is
+  indented; the module scope then runs on to the next `end` at the indent of the `module` line, and a lone `private`
+  in the next function reads as the keyword. `agentica fmt` rewrites such a file.
 - `export` is a keyword only in a re-export (`export Alias.name`). Before a declaration, which Agentica 0.31 rejects, it
   is scoped `invalid.illegal.export` and the declaration is highlighted as usual.
 - Outside `def` headers, type aliases and typed bindings (`x: Models.User = ...`), `Models.User` scopes `User` as an enum
