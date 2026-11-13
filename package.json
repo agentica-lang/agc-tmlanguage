@@ -1,7 +1,7 @@
 {
   "name": "agentica",
   "displayName": "Agentica",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Syntax highlighting for Agentica, a language for AI agents",
   "license": "Apache-2.0",
   "publisher": "agentica-lang",
@@ -46,8 +46,9 @@
     ]
   },
   "scripts": {
-    "test": "npm run test:grammar && npm run test:extension",
+    "test": "npm run test:grammar && npm run test:tokens && npm run test:extension",
     "test:grammar": "vscode-tmgrammar-test -g syntaxes/agentica.tmLanguage.json \"test/**/*.agc\"",
+    "test:tokens": "node --test test/tokens.test.mjs",
     "test:extension": "node --test test/extension.test.mjs",
     "test:repo": "node script/tokenize-agentica-repo.mjs",
     "package": "vsce package"

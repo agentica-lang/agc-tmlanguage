@@ -47,10 +47,12 @@ end
 module Stock
 # <------ storage.type.module.agentica
 #      ^^^^^ entity.name.namespace.agentica
+end
+# <--- keyword.control.agentica
 
-export module Report
-# <------ keyword.control.export.agentica
-#      ^^^^^^ storage.type.module.agentica
+module Report
+# <------ storage.type.module.agentica
+#      ^^^^^^ entity.name.namespace.agentica
 
   req = HTTP.Request(url: "x")
 #       ^^^^ entity.name.type.agentica
@@ -93,3 +95,5 @@ export module Report
   l = Logger.info("x")
 #     ^^^^^^ entity.name.namespace.agentica
 #            ^^^^ entity.name.function.agentica
+end
+# <--- keyword.control.agentica
