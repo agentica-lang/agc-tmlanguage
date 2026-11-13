@@ -8,6 +8,7 @@
     { "include": "#heredoc" },
     { "include": "#string" },
     { "include": "#regex" },
+    { "include": "#private-file" },
     { "include": "#declarations" },
     { "include": "#lambda" },
     { "include": "#block" },
@@ -165,8 +166,47 @@
         { "include": "#interpolation" }
       ]
     },
+    "private-file": {
+      "comment": "The `private` line of a file: the word alone in column 0, with blanks or a `#` comment after it. Anywhere else `private` is a name. A `\\r` may end the line when a tool keeps it.",
+      "match": "^(private)(?=[ \\t]*(?:#.*)?\\r?$)",
+      "captures": {
+        "1": { "name": "keyword.control.private.agentica" }
+      }
+    },
+    "private-module": {
+      "comment": "The `private` line of a module block: alone on a line at the indent of the block's declarations (two spaces or a tab), so a lone `private` that ends a function body (a variable) is not one.",
+      "match": "^(?: {2}|\\t)(private)(?=[ \\t]*(?:#.*)?\\r?$)",
+      "captures": {
+        "1": { "name": "keyword.control.private.agentica" }
+      }
+    },
+    "private-struct": {
+      "comment": "The `private` line of a struct body: alone on its line; `private: Bool` is a field.",
+      "match": "^\\s*(private)(?=[ \\t]*(?:#.*)?\\r?$)",
+      "captures": {
+        "1": { "name": "keyword.control.private.agentica" }
+      }
+    },
     "declarations": {
       "patterns": [
+        {
+          "comment": "A module block runs to the `end` at the indent of its `module` line, so its own `private` line can be told from a name at the end of a function body. `export module` is not valid; the `export` is scoped as illegal and the block still reads as one.",
+          "name": "meta.module.agentica",
+          "begin": "^(\\s*)(?:(export)\\s+)?(module)\\s+([A-Z][A-Za-z0-9_]*)",
+          "beginCaptures": {
+            "2": { "name": "invalid.illegal.export.agentica" },
+            "3": { "name": "storage.type.module.agentica" },
+            "4": { "name": "entity.name.namespace.agentica" }
+          },
+          "end": "^\\1(end)\\b",
+          "endCaptures": {
+            "1": { "name": "keyword.control.agentica" }
+          },
+          "patterns": [
+            { "include": "#private-module" },
+            { "include": "$self" }
+          ]
+        },
         {
           "name": "meta.function.agentica",
           "begin": "\\b(def)\\s+([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=))?)",
@@ -232,6 +272,7 @@
             "1": { "name": "keyword.control.agentica" }
           },
           "patterns": [
+            { "include": "#private-struct" },
             { "include": "#comments" },
             {
               "match": "^\\s*([a-z_][A-Za-z0-9_]*)\\s*(:)",
@@ -270,7 +311,7 @@
         {
           "begin": "^\\s*(?:(export)\\s+)?(type)\\s+([A-Z][A-Za-z0-9_]*)",
           "beginCaptures": {
-            "1": { "name": "keyword.control.export.agentica" },
+            "1": { "name": "invalid.illegal.export.agentica" },
             "2": { "name": "storage.type.type.agentica" },
             "3": { "name": "entity.name.type.alias.agentica" }
           },
@@ -283,7 +324,7 @@
         {
           "match": "^\\s*(?:(export)\\s+)?([A-Z][A-Za-z0-9_]*)\\s*(?=(?::[^=]*)?=(?!=))",
           "captures": {
-            "1": { "name": "keyword.control.export.agentica" },
+            "1": { "name": "invalid.illegal.export.agentica" },
             "2": { "name": "variable.other.constant.agentica" }
           }
         },
@@ -418,14 +459,6 @@
     "keywords": {
       "patterns": [
         {
-          "match": "^\\s*(?:(export)\\s+)?(module)\\s+([A-Z][A-Za-z0-9_]*)",
-          "captures": {
-            "1": { "name": "keyword.control.export.agentica" },
-            "2": { "name": "storage.type.module.agentica" },
-            "3": { "name": "entity.name.namespace.agentica" }
-          }
-        },
-        {
           "match": "^\\s*(break|next)\\s*(?=$|#|\\bif\\b)",
           "captures": {
             "1": { "name": "keyword.control.loop.agentica" }
@@ -462,8 +495,15 @@
           "name": "keyword.control.import.agentica"
         },
         {
+          "comment": "`export` is a reserved word that only re-exports: `export Alias.name`. Before a declaration (the syntax of Agentica 0.30) it is an error.",
+          "match": "^\\s*(export)(?=\\s+[A-Z][A-Za-z0-9_]*\\.)",
+          "captures": {
+            "1": { "name": "keyword.control.export.agentica" }
+          }
+        },
+        {
           "match": "\\bexport\\b",
-          "name": "keyword.control.export.agentica"
+          "name": "invalid.illegal.export.agentica"
         },
         {
           "match": "\\bdef\\b",
@@ -621,6 +661,19 @@
     "types": {
       "patterns": [
         {
+          "comment": "A path of capitalized names (`JSON.Value`, `TLS.Context`, `Models.User`) names a type in every segment, even an all-caps one such as `JSON`.",
+          "match": "\\b([A-Z][A-Za-z0-9_]*)((?:\\.[A-Z][A-Za-z0-9_]*)+)\\b",
+          "captures": {
+            "1": { "name": "entity.name.type.agentica" },
+            "2": {
+              "patterns": [
+                { "match": "\\.", "name": "punctuation.accessor.agentica" },
+                { "match": "[A-Z][A-Za-z0-9_]*", "name": "entity.name.type.agentica" }
+              ]
+            }
+          }
+        },
+        {
           "match": "\\b[A-Z][A-Z0-9_]+\\b",
           "name": "variable.other.constant.agentica"
         },
@@ -642,7 +695,7 @@
           "patterns": [{ "include": "#type-expression" }]
         },
         {
-          "match": "\\b([a-z_][A-Za-z0-9_]*)\\s*(:)(?=\\s)",
+          "match": "\\b([a-z_][A-Za-z0-9_]*)\\s*(:)(?!:)",
           "captures": {
             "1": { "name": "variable.parameter.named.agentica" },
             "2": { "name": "punctuation.separator.key-value.agentica" }

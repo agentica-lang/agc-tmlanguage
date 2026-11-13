@@ -33,8 +33,9 @@ m = {"a": 1, "b": [2, 3]}
 #   ^ punctuation.section.braces.agentica
 #                 ^ punctuation.section.brackets.agentica
 
-export def run() -> Void
-# <------ keyword.control.export.agentica
+def run() -> Void
+# <--- storage.type.function.agentica
+#   ^^^ entity.name.function.agentica
 end
 
 r = run(

@@ -31,10 +31,9 @@ LIMIT = 10
 # <----- variable.other.constant.agentica
 #       ^^ constant.numeric.integer.agentica
 
-export Max: Int = 3
-# <------ keyword.control.export.agentica
-#      ^^^ variable.other.constant.agentica
-#           ^^^ entity.name.type.agentica
+Max: Int = 3
+# <--- variable.other.constant.agentica
+#    ^^^ entity.name.type.agentica
 
 type UserId = Int
 # <---- storage.type.type.agentica

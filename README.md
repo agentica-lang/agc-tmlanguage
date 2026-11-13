@@ -19,8 +19,8 @@ header, and words that keep a `?` or `!` suffix). It is not on a marketplace yet
 
 ```sh
 npm ci
-npm run package                 # writes agentica-0.2.0.vsix
-code --install-extension agentica-0.2.0.vsix
+npm run package                 # writes agentica-0.3.0.vsix
+code --install-extension agentica-0.3.0.vsix
 ```
 
 CI also uploads the `.vsix` of each run as the `agentica-vsix` artifact.
@@ -48,7 +48,7 @@ The dev dependencies need Node 22 or later; CI uses Node 24.
 
 ```sh
 npm ci
-npm test                        # grammar assertions in test/*.agc and the extension test
+npm test                        # grammar assertions in test/*.agc, the token tests and the extension test
 npm run test:repo -- [path]     # tokenize every source of an Agentica checkout
 ```
 
@@ -71,7 +71,14 @@ A TextMate grammar matches lines with regular expressions, so it approximates th
 - `Family.Member` (`HTTP.Request`, `OpenSSL.Digest`) is scoped by shape: both names are types, as in any type path, and a call on a capitalized name (`Logger.info(x)`) is a module call. The grammar has no list of builtin names, so a user's names color the same way.
 - Only one or two heredocs may open on the same line. When two do, a line of the second body that starts at column 0
   with `<<~NAME` opens a new heredoc.
-- A map key written as a bare name (`{a: 1}`) is scoped like a named argument.
+- A map key written as a bare name (`{a: 1}`) is scoped like a named argument (`f(a, name: value)`).
+- The `private` line (`keyword.control.private`) is the word alone on its line, with blanks or a `#` comment after it;
+  anywhere else `private` is a name. The grammar finds the line by its place: in column 0 of a file, at two spaces (or a
+  tab) inside a `module` block, which it follows to the `end` at the indent of its `module` line, and at any indent in a
+  struct body. So a lone `private` that ends a function body (a variable) is a name, but a module body indented by
+  another width than `agentica fmt` writes reads its `private` line as a name too.
+- `export` is a keyword only in a re-export (`export Alias.name`). Before a declaration, which Agentica 0.31 rejects, it
+  is scoped `invalid.illegal.export` and the declaration is highlighted as usual.
 - Outside `def` headers, type aliases and typed bindings (`x: Models.User = ...`), `Models.User` scopes `User` as an enum
   variant, as `Color.Red` does: in an expression the two look the same.
 - An all-caps name such as `TIMEOUT_MS` is scoped as a constant, so an all-caps type name (`URL`) is too.

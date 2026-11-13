@@ -29,7 +29,7 @@ function openRuleLine(grammar, text) {
   let stack = textmate.INITIAL;
   const lines = text.replace(/\r\n?/g, "\n").replace(/\n$/, "").split("\n");
   for (const [index, line] of lines.entries()) {
-    if (stack.depth !== 1 && /^(export\s+)?(def|struct|enum|type)\s/.test(line)) return index + 1;
+    if (stack.depth !== 1 && /^(def|struct|enum|type)\s/.test(line)) return index + 1;
     stack = grammar.tokenizeLine(line, stack).ruleStack;
   }
   return stack.depth === 1 ? null : "end";

@@ -21,10 +21,11 @@ def label(
 #           ^^^^^ entity.name.type.agentica - variable.other.enummember.agentica
 end
 
-export type UserList = List[Models.User]
-#           ^^^^^^^^ entity.name.type.alias.agentica
-#                    ^ keyword.operator.assignment.agentica
-#                                  ^^^^ entity.name.type.agentica - variable.other.enummember.agentica
+type UserList = List[Models.User]
+# <---- storage.type.type.agentica
+#    ^^^^^^^^ entity.name.type.alias.agentica
+#             ^ keyword.operator.assignment.agentica
+#                           ^^^^ entity.name.type.agentica - variable.other.enummember.agentica
 
 def main() -> Void # trailing
 #             ^^^^ entity.name.type.agentica
@@ -84,3 +85,21 @@ def main() -> Void # trailing
 #   ^ constant.numeric.integer.agentica - string.agentica
 end
 # <--- keyword.control.agentica
+
+def read(info: File.Info, ctx: TLS.Context) -> Result[JSON.Value]
+#              ^^^^ entity.name.type.agentica
+#                   ^^^^ entity.name.type.agentica
+#                              ^^^ entity.name.type.agentica
+#                                  ^^^^^^^ entity.name.type.agentica
+#                                                     ^^^^ entity.name.type.agentica
+#                                                          ^^^^^ entity.name.type.agentica
+
+struct Reply
+  body: JSON.Value
+#       ^^^^ entity.name.type.agentica
+#            ^^^^^ entity.name.type.agentica
+end
+
+sock: TCP.Socket = Test.Case(name: "x")
+#     ^^^ entity.name.type.agentica
+#         ^^^^^^ entity.name.type.agentica
