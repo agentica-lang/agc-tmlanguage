@@ -54,6 +54,15 @@ module Tabbed
 	def f() -> Int = 1
 end
 
+module Closed
+  def f() -> Int = 1
+end
+
+private
+# <------- keyword.control.private.agentica
+
+def g() -> Int = 2
+
 struct Conn
   host: String
 

@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: agentica-lang/agentica
-          ref: 2b325ce9547629c0697c9c190a87c39853f4a579
+          ref: e90cf1207f8424745f7f67d28f6b67459d3b5bf3
           path: agentica
       - uses: actions/setup-node@v7
         with:
