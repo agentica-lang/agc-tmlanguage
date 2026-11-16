@@ -59,8 +59,8 @@ comment line asserts the scopes of the characters above its carets.
 [Agentica repository](https://github.com/sonic182/agentica), and every `agentica` code block in `site/content/`. It
 fails when a source ends inside an open rule, such as an unterminated heredoc, or when a rule is still open at a
 top-level `def`, `struct`, `enum` or `type` line. The path defaults to `../agentica`;
-`AGENTICA_REPO` also sets it. CI checks a pinned Agentica commit (`ref` in
-`.github/workflows/ci.yml`); bump it on purpose. Fixtures that are invalid on purpose (a `LEX-` or `PARSE-` golden) are skipped.
+`AGENTICA_REPO` also sets it. CI checks a pinned Agentica tag (`ref` in
+`.github/workflows/ci.yml` and `publish.yml`); bump it on purpose. Fixtures that are invalid on purpose (a `LEX-` or `PARSE-` golden) are skipped.
 
 ## Known limitations
 
@@ -70,7 +70,8 @@ A TextMate grammar matches lines with regular expressions, so it approximates th
   start or after `=`, `(`, `,` or `|>`; elsewhere it stays a variable.
 - `Family.Member` (`HTTP.Request`, `OpenSSL.Digest`) is scoped by shape: both names are types, as in any type path, and a call on a capitalized name (`Logger.info(x)`) is a module call. The grammar has no list of builtin names, so a user's names color the same way.
 - Only one or two heredocs may open on the same line. When two do, a line of the second body that starts at column 0
-  with `<<~NAME` opens a new heredoc.
+  with `<<~NAME` opens a new heredoc. A `<<~EAG` body is raw text with its `<% %>` tags scoped, but only when `<<~EAG` is the first
+  heredoc of its line.
 - A map key written as a bare name (`{a: 1}`) is scoped like a named argument (`f(a, name: value)`).
 - The `private` line (`keyword.control.private`) is the word alone on its line, with blanks or a `#` comment after it;
   anywhere else `private` is a name. The grammar finds the line by its place: in column 0 of a file, at two spaces (or a

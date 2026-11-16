@@ -133,8 +133,39 @@
       ]
     },
     "heredoc-single": {
+      "patterns": [
+        { "include": "#heredoc-eag" },
+        { "include": "#heredoc-plain" }
+      ]
+    },
+    "heredoc-eag": {
+      "name": "meta.heredoc.eag.agentica",
+      "begin": "(<<~)(?=EAG(?![A-Z0-9_]))([A-Z][A-Z0-9_]*)",
+      "beginCaptures": {
+        "0": { "name": "string.unquoted.heredoc.agentica punctuation.definition.string.begin.agentica" }
+      },
+      "end": "^\\s*(\\2)$",
+      "endCaptures": {
+        "1": { "name": "string.unquoted.heredoc.agentica punctuation.definition.string.end.agentica" }
+      },
+      "patterns": [
+        {
+          "begin": "\\G(?=.)",
+          "end": "$",
+          "patterns": [
+            {
+              "match": "<<~[A-Z][A-Z0-9_]*",
+              "name": "string.unquoted.heredoc.agentica punctuation.definition.string.begin.agentica"
+            },
+            { "include": "$self" }
+          ]
+        },
+        { "include": "#eag-body-line" }
+      ]
+    },
+    "heredoc-plain": {
       "name": "meta.heredoc.agentica",
-      "begin": "(<<~)([A-Z][A-Z0-9_]*)",
+      "begin": "(<<~)(?!EAG(?![A-Z0-9_]))([A-Z][A-Z0-9_]*)",
       "beginCaptures": {
         "0": { "name": "string.unquoted.heredoc.agentica punctuation.definition.string.begin.agentica" }
       },
@@ -155,6 +186,56 @@
           ]
         },
         { "include": "#heredoc-body-line" }
+      ]
+    },
+    "eag-body-line": {
+      "comment": "An EAG body is raw text: no escape and no interpolation. Its tags end on their line, at the first `%>`.",
+      "name": "string.unquoted.heredoc.agentica",
+      "begin": "^(?=.)",
+      "end": "$",
+      "patterns": [
+        {
+          "match": "<%%",
+          "name": "constant.character.escape.eag.agentica"
+        },
+        {
+          "name": "meta.tag.eag.agentica comment.block.eag.agentica",
+          "begin": "<%#",
+          "beginCaptures": {
+            "0": { "name": "punctuation.section.embedded.begin.agentica" }
+          },
+          "end": "-?%>|(?=$)",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.embedded.end.agentica" }
+          }
+        },
+        {
+          "name": "meta.tag.eag.agentica",
+          "begin": "(<%@)\\s*(escape)\\b",
+          "beginCaptures": {
+            "1": { "name": "punctuation.section.embedded.begin.agentica" },
+            "2": { "name": "keyword.other.directive.eag.agentica" }
+          },
+          "end": "-?%>|(?=$)",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.embedded.end.agentica" }
+          },
+          "contentName": "meta.embedded.line.agentica",
+          "patterns": [{ "include": "$self" }]
+        },
+        {
+          "name": "meta.tag.eag.agentica",
+          "begin": "<%(?:==|=|-)?",
+          "beginCaptures": {
+            "0": { "name": "punctuation.section.embedded.begin.agentica" }
+          },
+          "end": "-?%>|(?=$)",
+          "endCaptures": {
+            "0": { "name": "punctuation.section.embedded.end.agentica" }
+          },
+          "contentName": "meta.embedded.line.agentica",
+          "patterns": [{ "include": "$self" }]
+        }
       ]
     },
     "heredoc-body-line": {
@@ -187,8 +268,119 @@
         "1": { "name": "keyword.control.private.agentica" }
       }
     },
+    "def-parameters": {
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.parameters.begin.agentica" }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.parameters.end.agentica" }
+      },
+      "patterns": [
+        { "include": "#comments" },
+        {
+          "match": "\\b(out)(?=\\s+[a-z_][A-Za-z0-9_]*\\s*:)",
+          "captures": { "1": { "name": "storage.modifier.out.agentica" } }
+        },
+        {
+          "match": "(?:(?<=,)|^)\\s*(\\.\\.\\.)(?=\\s*[,)])",
+          "captures": { "1": { "name": "keyword.operator.variadic.agentica" } }
+        },
+        {
+          "begin": "(?:^\\s*)?\\b([a-z_][A-Za-z0-9_]*)\\s*(:)",
+          "beginCaptures": {
+            "1": { "name": "variable.parameter.agentica" },
+            "2": { "name": "punctuation.separator.type.agentica" }
+          },
+          "end": "(?=[,)=])",
+          "patterns": [{ "include": "#type-expression" }]
+        },
+        { "include": "#parens" },
+        { "include": "$self" }
+      ]
+    },
+    "def-result": {
+      "begin": "->",
+      "beginCaptures": {
+        "0": { "name": "keyword.operator.arrow.agentica" }
+      },
+      "end": "(?==)|(?=#)|$",
+      "patterns": [{ "include": "#type-expression" }]
+    },
+    "extern-member": {
+      "comment": "The members of an extern block, each a keyword only at the start of its line: compute before def, resource, callback. A def, a struct and a doc comment are the ordinary rules.",
+      "patterns": [
+        {
+          "match": "^\\s*(compute)(?=\\s+def\\b)",
+          "captures": { "1": { "name": "storage.modifier.compute.agentica" } }
+        },
+        {
+          "name": "meta.resource.agentica",
+          "begin": "^\\s*(resource)\\s+([A-Z][A-Za-z0-9_]*)",
+          "beginCaptures": {
+            "1": { "name": "storage.type.resource.agentica" },
+            "2": { "name": "entity.name.type.resource.agentica" }
+          },
+          "end": "(?=#)|$",
+          "patterns": [
+            {
+              "match": "\\b(free_ref|free)\\s*(:)",
+              "captures": {
+                "1": { "name": "variable.parameter.named.agentica" },
+                "2": { "name": "punctuation.separator.key-value.agentica" }
+              }
+            },
+            {
+              "match": "\\b(C)(\\.)(Function)\\b",
+              "captures": {
+                "1": { "name": "entity.name.type.agentica" },
+                "2": { "name": "punctuation.accessor.agentica" },
+                "3": { "name": "entity.name.type.agentica" }
+              }
+            },
+            {
+              "match": "[A-Za-z_][A-Za-z0-9_]*",
+              "name": "entity.name.function.agentica"
+            },
+            { "include": "#punctuation" }
+          ]
+        },
+        {
+          "name": "meta.callback.agentica",
+          "begin": "^\\s*(callback)\\s+([A-Z][A-Za-z0-9_]*)",
+          "beginCaptures": {
+            "1": { "name": "storage.type.callback.agentica" },
+            "2": { "name": "entity.name.type.callback.agentica" }
+          },
+          "end": "(?=#)|$",
+          "patterns": [
+            { "include": "#def-parameters" },
+            { "include": "#def-result" }
+          ]
+        }
+      ]
+    },
     "declarations": {
       "patterns": [
+        {
+          "comment": "An extern block runs to the `end` at the indent of its `extern` line. `extern` and `module` are words only here: before the library string.",
+          "name": "meta.extern.agentica",
+          "begin": "^(\\s*)(extern)\\b(?:\\s+(module)\\b)?(?=\\s+\")",
+          "beginCaptures": {
+            "2": { "name": "storage.type.extern.agentica" },
+            "3": { "name": "storage.type.module.agentica" }
+          },
+          "end": "^\\1(end)\\b",
+          "endCaptures": {
+            "1": { "name": "keyword.control.agentica" }
+          },
+          "patterns": [
+            { "include": "#extern-member" },
+            { "include": "#private-module" },
+            { "include": "$self" }
+          ]
+        },
         {
           "comment": "A module block runs to the `end` at the indent of its `module` line, so its own `private` line can be told from a name at the end of a function body. `export module` is not valid; the `export` is scoped as illegal and the block still reads as one.",
           "name": "meta.module.agentica",
@@ -216,38 +408,8 @@
           },
           "end": "(?=#)|$",
           "patterns": [
-            {
-              "begin": "\\(",
-              "beginCaptures": {
-                "0": { "name": "punctuation.definition.parameters.begin.agentica" }
-              },
-              "end": "\\)",
-              "endCaptures": {
-                "0": { "name": "punctuation.definition.parameters.end.agentica" }
-              },
-              "patterns": [
-                { "include": "#comments" },
-                {
-                  "begin": "(?:^\\s*)?\\b([a-z_][A-Za-z0-9_]*)\\s*(:)",
-                  "beginCaptures": {
-                    "1": { "name": "variable.parameter.agentica" },
-                    "2": { "name": "punctuation.separator.type.agentica" }
-                  },
-                  "end": "(?=[,)=])",
-                  "patterns": [{ "include": "#type-expression" }]
-                },
-                { "include": "#parens" },
-                { "include": "$self" }
-              ]
-            },
-            {
-              "begin": "->",
-              "beginCaptures": {
-                "0": { "name": "keyword.operator.arrow.agentica" }
-              },
-              "end": "(?==)|(?=#)|$",
-              "patterns": [{ "include": "#type-expression" }]
-            },
+            { "include": "#def-parameters" },
+            { "include": "#def-result" },
             {
               "comment": "A one-line def: `def f(x: Int) -> Int = x * 2`. The expression is an ordinary one.",
               "begin": "=(?!=)",
