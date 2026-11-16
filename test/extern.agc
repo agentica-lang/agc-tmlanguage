@@ -79,3 +79,6 @@ def resource(extern: Int, callback: Int, out: Int) -> Int
 #          ^ keyword.operator.assignment.agentica
   return resource
 end
+
+  extern "demo"
+# ^^^^^^ - storage.type.extern.agentica

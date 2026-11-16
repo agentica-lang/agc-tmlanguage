@@ -43,6 +43,10 @@ def page(names: List[String]) -> String
 #       ^^^^^^ keyword.other.directive.eag.agentica
 #              ^ keyword.operator.reference.agentica
 #                               ^^ punctuation.section.embedded.end.agentica
+    <%= name # note -%> tail
+#            ^^^^^^ comment.line.number-sign.agentica
+#                   ^^^ punctuation.section.embedded.end.agentica - comment.line.number-sign.agentica
+#                      ^^^^^ string.unquoted.heredoc.agentica - comment.line.number-sign.agentica
     </ul>
 #   ^^^^^ string.unquoted.heredoc.agentica
   EAG

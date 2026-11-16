@@ -188,6 +188,13 @@
         { "include": "#heredoc-body-line" }
       ]
     },
+    "eag-tag-comment": {
+      "match": "(#)(?:(?!-?%>).)*",
+      "name": "comment.line.number-sign.agentica",
+      "captures": {
+        "1": { "name": "punctuation.definition.comment.agentica" }
+      }
+    },
     "eag-body-line": {
       "comment": "An EAG body is raw text: no escape and no interpolation. Its tags end on their line, at the first `%>`.",
       "name": "string.unquoted.heredoc.agentica",
@@ -221,7 +228,10 @@
             "0": { "name": "punctuation.section.embedded.end.agentica" }
           },
           "contentName": "meta.embedded.line.agentica",
-          "patterns": [{ "include": "$self" }]
+          "patterns": [
+            { "include": "#eag-tag-comment" },
+            { "include": "$self" }
+          ]
         },
         {
           "name": "meta.tag.eag.agentica",
@@ -234,7 +244,10 @@
             "0": { "name": "punctuation.section.embedded.end.agentica" }
           },
           "contentName": "meta.embedded.line.agentica",
-          "patterns": [{ "include": "$self" }]
+          "patterns": [
+            { "include": "#eag-tag-comment" },
+            { "include": "$self" }
+          ]
         }
       ]
     },
@@ -364,14 +377,14 @@
     "declarations": {
       "patterns": [
         {
-          "comment": "An extern block runs to the `end` at the indent of its `extern` line. `extern` and `module` are words only here: before the library string.",
+          "comment": "An extern block is top level: `extern` and its `end` are in column 0. `extern` and `module` are words only here: before the library string.",
           "name": "meta.extern.agentica",
-          "begin": "^(\\s*)(extern)\\b(?:\\s+(module)\\b)?(?=\\s+\")",
+          "begin": "^(extern)\\b(?:\\s+(module)\\b)?(?=\\s+\")",
           "beginCaptures": {
-            "2": { "name": "storage.type.extern.agentica" },
-            "3": { "name": "storage.type.module.agentica" }
+            "1": { "name": "storage.type.extern.agentica" },
+            "2": { "name": "storage.type.module.agentica" }
           },
-          "end": "^\\1(end)\\b",
+          "end": "^(end)\\b",
           "endCaptures": {
             "1": { "name": "keyword.control.agentica" }
           },
