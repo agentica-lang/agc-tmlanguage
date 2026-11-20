@@ -19,8 +19,8 @@ header, and words that keep a `?` or `!` suffix). It is not on a marketplace yet
 
 ```sh
 npm ci
-npm run package                 # writes agentica-0.4.0.vsix
-code --install-extension agentica-0.4.0.vsix
+npm run package                 # writes agentica-language-0.4.0.vsix
+code --install-extension agentica-language-0.4.0.vsix
 ```
 
 CI also uploads the `.vsix` of each run as the `agentica-vsix` artifact.
