@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-11-20
+
+### Fixed
+
+- Point links to the Agentica repository and tracking issue at the `agentica-lang` organization.
+
 ## [0.4.0] - 2026-11-16
 
 Agentica 0.33.0.
@@ -20,4 +26,5 @@ Agentica 0.33.0.
 
 - CI and the publish workflow check out Agentica at the commit of 0.33.0.
 
+[0.4.1]: https://github.com/agentica-lang/agc-tmlanguage/releases/tag/0.4.1
 [0.4.0]: https://github.com/agentica-lang/agc-tmlanguage/releases/tag/0.4.0

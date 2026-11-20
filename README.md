@@ -1,7 +1,7 @@
 # agc-tmlanguage
 
-A TextMate grammar (syntax highlighting) for [Agentica](https://github.com/sonic182/agentica), a language for AI agents.
-Tracked in [sonic182/agentica#347](https://github.com/sonic182/agentica/issues/347).
+A TextMate grammar (syntax highlighting) for [Agentica](https://github.com/agentica-lang/agentica), a language for AI agents.
+Tracked in [agentica-lang/agentica#347](https://github.com/agentica-lang/agentica/issues/347).
 
 > **Status:** early stage. The grammar and a VS Code extension are usable; nothing is published yet.
 
@@ -19,8 +19,8 @@ header, and words that keep a `?` or `!` suffix). It is not on a marketplace yet
 
 ```sh
 npm ci
-npm run package                 # writes agentica-language-0.4.0.vsix
-code --install-extension agentica-language-0.4.0.vsix
+npm run package                 # writes agentica-language-0.4.1.vsix
+code --install-extension agentica-language-0.4.1.vsix
 ```
 
 CI also uploads the `.vsix` of each run as the `agentica-vsix` artifact.
@@ -54,7 +54,7 @@ npm run test:repo -- [path]     # tokenize every source of an Agentica checkout
 comment line asserts the scopes of the characters above its carets.
 
 `test:repo` tokenizes every `.agc` file in `compiler/`, `examples/`, `stdlib/`, `tests/fixtures/` and `tests/bdd/` of the
-[Agentica repository](https://github.com/sonic182/agentica), and every `agentica` code block in `site/content/`. It
+[Agentica repository](https://github.com/agentica-lang/agentica), and every `agentica` code block in `site/content/`. It
 fails when a source ends inside an open rule, such as an unterminated heredoc, or when a rule is still open at a
 top-level `def`, `struct`, `enum` or `type` line. The path defaults to `../agentica`;
 `AGENTICA_REPO` also sets it. CI checks a pinned Agentica commit (`ref` in
