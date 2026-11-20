@@ -1,10 +1,11 @@
 {
   "name": "agentica-language",
   "displayName": "Agentica",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Syntax highlighting for Agentica, a language for AI agents",
   "license": "Apache-2.0",
   "publisher": "agentica-lang",
+  "icon": "icon.png",
   "private": true,
   "type": "module",
   "repository": {
@@ -20,6 +21,7 @@
   "files": [
     "LICENSE",
     "README.md",
+    "icon.png",
     "language-configuration.json",
     "syntaxes/agentica.tmLanguage.json"
   ],

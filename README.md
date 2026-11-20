@@ -3,8 +3,6 @@
 A TextMate grammar (syntax highlighting) for [Agentica](https://github.com/agentica-lang/agentica), a language for AI agents.
 Tracked in [agentica-lang/agentica#347](https://github.com/agentica-lang/agentica/issues/347).
 
-> **Status:** early stage. The grammar and a VS Code extension are usable; nothing is published yet.
-
 The grammar is [`syntaxes/agentica.tmLanguage.json`](syntaxes/agentica.tmLanguage.json), with scope name
 `source.agentica` for `.agc` files. It is tested with vscode-textmate, the engine of VS Code and Shiki. Sublime Text
 and `bat` read `.sublime-syntax` files, so they need a converted copy.
@@ -15,12 +13,15 @@ Neovim highlights with tree-sitter instead; see [docs/neovim.md](docs/neovim.md)
 
 The repository is also a VS Code extension: the grammar plus a language configuration (`#` comments, bracket pairs,
 indentation after `def`, `if`, `do`, the other block openers and the `) -> Type` line that closes a multi-line `def`
-header, and words that keep a `?` or `!` suffix). It is not on a marketplace yet; build and install it from a checkout:
+header, and words that keep a `?` or `!` suffix).
+
+Install [Agentica from the VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=agentica-lang.agentica-language)
+or build and install it from a checkout:
 
 ```sh
 npm ci
-npm run package                 # writes agentica-language-0.4.1.vsix
-code --install-extension agentica-language-0.4.1.vsix
+npm run package -- --out agentica.vsix
+code --install-extension agentica.vsix
 ```
 
 CI also uploads the `.vsix` of each run as the `agentica-vsix` artifact.
