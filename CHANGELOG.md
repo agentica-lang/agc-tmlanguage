@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Safe navigation: `&.` is `keyword.operator.safe-navigation.agentica`, and the name after it is scoped as after `.` (`o&.name`, `o&.name(args)`, `a&.b&.c`, a line that starts with `&.name`).
+
+### Changed
+
+- CI and the publish workflow check out Agentica at the commit of 0.38.0.
+
 ## [0.4.2] - 2026-11-20
 
 ### Added
