@@ -780,6 +780,27 @@
           }
         },
         {
+          "match": "(&\\.)\\s*([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=)))",
+          "captures": {
+            "1": { "name": "keyword.operator.safe-navigation.agentica" },
+            "2": { "name": "entity.name.function.member.agentica" }
+          }
+        },
+        {
+          "match": "(&\\.)\\s*([a-z_][A-Za-z0-9_]*)(?=\\s*\\(|\\s+do\\b|\\s+\\{)",
+          "captures": {
+            "1": { "name": "keyword.operator.safe-navigation.agentica" },
+            "2": { "name": "entity.name.function.member.agentica" }
+          }
+        },
+        {
+          "match": "(&\\.)\\s*([a-z_][A-Za-z0-9_]*)\\b",
+          "captures": {
+            "1": { "name": "keyword.operator.safe-navigation.agentica" },
+            "2": { "name": "variable.other.property.agentica" }
+          }
+        },
+        {
           "match": "(\\.)\\s*([a-z_][A-Za-z0-9_]*(?:\\?|!(?!=)))",
           "captures": {
             "1": { "name": "punctuation.accessor.agentica" },
@@ -887,6 +908,7 @@
         { "match": "[+\\-*/%]=", "name": "keyword.operator.assignment.compound.agentica" },
         { "match": "=", "name": "keyword.operator.assignment.agentica" },
         { "match": "&&|\\|\\||!", "name": "keyword.operator.logical.agentica" },
+        { "match": "&\\.", "name": "keyword.operator.safe-navigation.agentica" },
         { "match": "[+\\-*/%]", "name": "keyword.operator.arithmetic.agentica" },
         { "match": "&", "name": "keyword.operator.reference.agentica" }
       ]
